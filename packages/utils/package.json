@@ -1,0 +1,23 @@
+{
+	"name": "@kaede/utils",
+	"main": "./lib/index.js",
+	"type": "module",
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/bun": "1.1.14",
+		"@types/turndown": "^5.0.5"
+	},
+	"dependencies": {
+		"abort-controller": "3.0.0",
+		"chrono-node": "2.7.7",
+		"dotenv": "16.4.7",
+		"file-type": "19.6.0",
+		"https-proxy-agent": "7.0.6",
+		"marked": "^15.0.4",
+		"meinu": "6.10.0",
+		"node-fetch": "3.3.2",
+		"node-vibrant": "4.0.0",
+		"sharp": "0.33.5",
+		"turndown": "^7.2.0"
+	}
+}

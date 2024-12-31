@@ -1,0 +1,10 @@
+{
+	"name": "kaede-workspace",
+	"private": true,
+	"workspaces": ["packages/*"],
+	"scripts": {
+		"apis": "bun run --cwd packages/apis dev",
+		"bot:dev": "bun run --cwd packages/bot dev",
+		"bot": "bun run --cwd packages/bot start"
+	}
+}
