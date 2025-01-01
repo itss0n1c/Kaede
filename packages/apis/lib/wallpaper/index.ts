@@ -1,5 +1,4 @@
-import { get_json } from '@kaede/utils';
-import { join } from 'node:path';
+import { api_request_client, type ReqClientInit } from '@kaede/utils';
 import type {
 	WallpaperCategory,
 	WallpaperInfo,
@@ -14,23 +13,11 @@ interface APIRes<T> {
 	data: T;
 }
 
-const API_BASE = 'https://wallhaven.cc/api/v1';
-const API_KEY = 'MzBug754NapY4oownnuLOETJjip2MbfY';
+const _client = api_request_client('https://wallhaven.cc/api/v1');
 
-async function request<T>(path: string, _queries: Record<string, unknown> = {}): Promise<T> {
-	const url = new URL(API_BASE);
-	url.pathname = join(url.pathname, path);
-
-	const queries = { ..._queries, apikey: API_KEY };
-	for (const [key, value] of Object.entries(queries)) {
-		url.searchParams.append(key, value);
-	}
-	console.log(url.toString());
-	const json = await get_json<APIRes<T>>(url.toString());
-
-	if (json.error) {
-		throw new Error(json.error);
-	}
+async function request<T>(opts: ReqClientInit): Promise<T> {
+	const json = await _client<APIRes<T>>(opts);
+	if (json.error) throw new Error(json.error);
 	return json.data;
 }
 
@@ -52,20 +39,23 @@ function _match_ratio(ratios: WallpaperRatio = 'allwide'): string {
 	return sizes[ratios].join(',');
 }
 
-export const get = async (id: string): Promise<WallpaperInfo> => request(`/w/${id}`);
+export const get = async (id: string): Promise<WallpaperInfo> => request({ path: `/w/${id}` });
 
 export async function search(options: Partial<WallpaperSearch>): Promise<WallpaperSearchRes[]> {
-	return request('/search', {
-		...options,
-		categories: _match_category(options.categories),
-		purity: _match_purity(['sfw']),
-		// purity: _match_purity(options.purity),
-		ratios: _match_ratio(options.ratios),
+	return request({
+		path: '/search',
+		queries: {
+			...options,
+			categories: _match_category(options.categories),
+			purity: _match_purity(['sfw']),
+			ratios: _match_ratio(options.ratios),
+		},
 	});
 }
 
-export async function search_with_info(options: Partial<WallpaperSearch>): Promise<WallpaperInfo[]> {
-	return Promise.all((await search(options)).slice(0, 5).map((r) => get(r.id)));
-}
+export const search_with_info = (options: Partial<WallpaperSearch>) =>
+	search(options)
+		.then((r) => r.slice(0, 5).map((i) => get(i.id)))
+		.then((r) => Promise.all(r));
 
 export type * from './types';

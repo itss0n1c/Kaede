@@ -1,18 +1,17 @@
 import {
 	ActionRowBuilder,
-	ApplicationIntegrationType,
 	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	Command,
 	EmbedBuilder,
 	type ImageExtension,
-	InteractionContextType,
 	TimestampStyles,
-	bytesToSize,
+	bytes_to_size,
 	get_buf,
 	get_image_color,
 	inlineCode,
+	pluralize,
 	time_str,
 	try_prom,
 } from '@kaede/utils';
@@ -23,22 +22,21 @@ import type { Kaede } from '../index.js';
 export default new Command<Kaede>({
 	name: 'info',
 	description: 'Information about Kaede',
-	integration_types: [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall],
-	contexts: [InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel],
 }).addHandler('chatInput', async (bot, int) => {
-	await int.deferReply();
+	await int.reply(bot.thinking);
 
 	const time_since = process.uptime() * 1000;
 	const uptime = time_str(Date.now() - time_since, TimestampStyles.RelativeTime);
 
 	console.log(totalmem());
-	const memory_usage = `${bytesToSize(process.memoryUsage().heapUsed)}`;
+	const memory_usage = `${bytes_to_size(process.memoryUsage().heapUsed)}`;
 
 	const cpu_usage_percent = await cpu.usage();
 	const cpu_usage = `${cpu_usage_percent.toFixed(2)}%`;
 
-	const users_count = bot.application?.approximateUserInstallCount?.toLocaleString() ?? 'N/A';
-	const cmds_count = bot.commands.reduce((a, b) => a + b.subcommands.length, 0).toLocaleString();
+	const servers_count = bot.guilds.cache.size;
+	const users_count = bot.application?.approximateUserInstallCount;
+	const cmds_count = bot.commands.reduce((a, b) => a + b.subcommands.length, 0);
 
 	const bun_version = process.versions.bun ?? 'N/A';
 	const node_version = process.versions.node ?? 'N/A';
@@ -48,21 +46,25 @@ export default new Command<Kaede>({
 		.setDescription(
 			[
 				`### ${bot.name}`,
-				`About **${users_count} users** have me installed.`,
-				`**${cmds_count} commands** available.`,
+				`I've been added to **${servers_count.toLocaleString()} ${pluralize('server', servers_count)}**.`,
+				`About **${users_count?.toLocaleString() ?? 'N/A'} ${pluralize('user', users_count ?? 0)}** have me installed.`,
+				`**${cmds_count.toLocaleString()} ${pluralize('command', cmds_count)}** available.`,
 
 				'### Server Info',
 				`**Uptime:** ${uptime}`,
 				`**Memory:** ${inlineCode(memory_usage)}`,
 				`**CPU:** ${inlineCode(cpu_usage)}`,
 				'',
-				`**Uses [Meinu ^${bot.meinu_version}](https://github.com/itss0n1c/meinu), on the [Bun runtime](https://bun.sh).**`,
+				'Made with ❤️ by [S0n1c](https://s0n1c.ca)',
+				'',
+				`-# Made with [Meinu v${bot.meinu_version}](https://github.com/itss0n1c/meinu)`,
+				'-# developed on the [Bun runtime](https://bun.sh).',
 			].join('\n'),
 		)
 		.setFooter({
 			text: `Bun: ${bun_version} | Node API: ${node_version} | WebKit: ${webkit_version}`,
 		})
-		.setColor(bot.bot_color);
+		.setColor(bot.color);
 
 	const files: AttachmentBuilder[] = [];
 
@@ -84,5 +86,5 @@ export default new Command<Kaede>({
 		new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(bot.install_link).setLabel('Install'),
 	]);
 
-	return int.editReply({ embeds: [embed], files, components: [row] });
+	return int.editReply({ content: '', embeds: [embed], files, components: [row] });
 });

@@ -26,7 +26,7 @@ interface WallpaperTag {
 
 export interface WallpaperInfo {
 	id: string;
-	url: string;
+	url?: string;
 	short_url: string;
 	uploader: WallpaperUploader;
 	views: number;

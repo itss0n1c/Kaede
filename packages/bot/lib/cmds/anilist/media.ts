@@ -35,7 +35,7 @@ const handle_autocomplete = (type: MType) => async (bot: Kaede, int: Autocomplet
 };
 
 const handle_chat = (type: MType) => async (bot: Kaede, int: ChatInputCommandInteraction) => {
-	await int.deferReply();
+	await int.reply(bot.thinking);
 	const _id = int.options.getString(`${type}_id`, true);
 	const id = Number.parseInt(_id);
 	if (Number.isNaN(id))
@@ -44,7 +44,7 @@ const handle_chat = (type: MType) => async (bot: Kaede, int: ChatInputCommandInt
 		});
 	const res = await try_prom(anilist.get(id, type === 'anime' ? 'ANIME' : 'MANGA'));
 	if (!res) return int.editReply({ content: 'Not found' });
-	const author = res.staff.edges.find((e) => ['Original Creator', 'Story & Art'].includes(e.role ?? ''))?.node;
+	const author = anilist.get_author(res.staff);
 	const format = anilist.humanize_format(res.format);
 	const title = res.title?.userPreferred ?? res.title?.english ?? res.title?.romaji ?? res.title?.native;
 	const cover = res.coverImage?.extraLarge;
@@ -98,6 +98,7 @@ const handle_chat = (type: MType) => async (bot: Kaede, int: ChatInputCommandInt
 	]);
 
 	return int.editReply({
+		content: '',
 		files,
 		embeds: [embed],
 		components: [row],

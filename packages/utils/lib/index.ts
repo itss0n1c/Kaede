@@ -1,24 +1,27 @@
-import { AbortController } from 'abort-controller';
+import type { StringLike } from 'bun';
 import { parseDate } from 'chrono-node';
-import { HttpsProxyAgent } from 'https-proxy-agent';
 import {
+	AttachmentBuilder,
 	type ColorResolvable,
+	type Emoji,
 	TimestampStyles,
 	type TimestampStylesString,
 	escapeInlineCode,
 	inlineCode,
 	time,
 } from 'meinu';
-import { type RequestInit as Options, type Response, default as _fetch } from 'node-fetch';
+
 import { Vibrant } from 'node-vibrant/node';
 import { createWriteStream } from 'node:fs';
-import { setTimeout as wait_prom } from 'node:timers/promises';
+import { join } from 'node:path';
+import { Stream } from 'node:stream';
 import sharp from 'sharp';
 import TurndownService from 'turndown';
+import UserAgents from 'user-agents';
 
-export interface RequestInit extends Options {
-	proxy?: boolean;
+export interface ReqInit extends RequestInit {
 	timeout?: number;
+	require_body?: boolean;
 }
 
 export type Maybe<T> = T | undefined | null;
@@ -26,90 +29,85 @@ export type MaybePartial<T> = {
 	[P in keyof T]?: Maybe<T[P]>;
 };
 
-async function get_proxy(): Promise<{ ip: string; port: string }> {
-	const res = await fetch(
-		'https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=us&ssl=all&anonymity=all',
-	);
-	const list = await res.text();
-	const proxies = list
-		.split('\n')
-		.map((proxy) => proxy.split(':'))
-		.map(([ip, port]) => ({ ip, port }));
-	return proxies[Math.floor(Math.random() * proxies.length)];
-}
-
-export async function fetch(url: string, _option: RequestInit = {}): Promise<Response> {
+export async function fetch(url: string, _option: ReqInit = {}): Promise<Response> {
 	const option = {
 		..._option,
 	};
 
 	let timeout: Timer | undefined;
 	if (_option.timeout) {
-		const signal = new AbortController();
-		timeout = setTimeout(() => signal.abort(), _option.timeout);
-
-		option.signal = signal.signal;
-	}
-
-	if (_option.proxy) {
-		const proxy = await get_proxy();
-		option.agent = new HttpsProxyAgent(`http://${proxy.ip}:${proxy.port}`);
+		option.signal = AbortSignal.timeout(_option.timeout);
 	}
 
 	let res: Response;
 	try {
-		res = await _fetch(url, option);
+		res = await globalThis.fetch(url, option);
 	} catch (e) {
 		clearTimeout(timeout);
 		throw e;
 	}
 	clearTimeout(timeout);
+
+	if (_option.require_body) if (!res.ok || !res.body) throw new Error(`Invalid response from ${url}`);
+
 	return res;
 }
 
-export async function get_json<T>(url: string, option: RequestInit = {}) {
-	const res = await fetch(url, option);
-	if (!res.ok) {
-		throw new Error(`HTTP Error: ${res.status}`);
+export const get_json = <T>(url: string, option: ReqInit = {}) =>
+	fetch(url, { ...option, require_body: true }).then((res) => res.json() as Promise<T>);
+export const get_text = (url: string, option: ReqInit = {}) =>
+	fetch(url, { ...option, require_body: true }).then((res) => res.text());
+export const get_buf = (url: string, option: ReqInit = {}) =>
+	fetch(url, { ...option, require_body: true }).then((res) => res.arrayBuffer().then((buf) => Buffer.from(buf)));
+export const get_stream = (url: string, option: ReqInit = {}) =>
+	fetch(url, { ...option, require_body: true }).then((res) => res.body as ReadableStream<ArrayBufferLike>);
+
+export interface ReqClientInit {
+	path: string;
+	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+	queries?: Record<string, StringLike>;
+	headers?: RequestInit['headers'];
+	body?: RequestInit['body'];
+}
+
+export function api_request_client(base: string) {
+	return <T>({ path, method, queries, headers, body }: ReqClientInit) => {
+		const url = new URL(base);
+		url.pathname = join(url.pathname, path);
+		if (queries) for (const [key, value] of Object.entries(queries)) url.searchParams.append(key, value.toString());
+		return get_json<T>(url.toString(), {
+			method: method ?? 'GET',
+			headers,
+			body,
+		});
+	};
+}
+
+export async function get_stream_node(url: string, option: ReqInit = {}): Promise<Stream> {
+	const res = await get_stream(url, option);
+	const stream = new Stream.PassThrough();
+	for await (const chunk of res) {
+		stream.write(chunk);
 	}
-	return res.json() as Promise<T>;
+	stream.end();
+	return stream;
 }
 
-export async function get_text(url: string, option: RequestInit = {}) {
-	const res = await fetch(url, option);
-	if (!res.ok) {
-		throw new Error(`HTTP Error: ${res.status}`);
+export async function stream_to_attachment(url: string, name: string) {
+	const res = await get_stream_node(url);
+	return new AttachmentBuilder(res, { name });
+}
+
+export async function url_to_file(url: string, path: string) {
+	const res = await get_stream(url);
+	const stream = createWriteStream(path);
+	for await (const chunk of res) {
+		stream.write(chunk);
 	}
-	return res.text();
+	stream.end();
 }
 
-export async function get_buf(url: string): Promise<Buffer> {
-	const res = await fetch(url);
-	if (!res.body) {
-		throw new Error('No body');
-	}
-	return Buffer.from(await res.arrayBuffer());
-}
-
-export async function get_stream(url: string) {
-	const res = await fetch(url);
-	if (!res.body) {
-		throw new Error('No body');
-	}
-	return res.body;
-}
-
-export async function url_to_file(url: string, path: string): Promise<string> {
-	const file = createWriteStream(path);
-	const req = await get_stream(url);
-	return new Promise((resolve, reject) => {
-		req.pipe(file);
-		req.on('end', () => resolve(path));
-		req.on('error', (err) => reject(err));
-	});
-}
-
-export function nFormatter(num: number, digits = 1) {
+export function num_abbreviate(num: number, digits = 1) {
 	const si = [
 		{ value: 1e18, symbol: 'E' },
 		{ value: 1e15, symbol: 'P' },
@@ -127,33 +125,26 @@ export function nFormatter(num: number, digits = 1) {
 	return num.toString();
 }
 
-export function bytesToSize(bytes: number): string {
+export function bytes_to_size(bytes: number): string {
 	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
 	if (bytes === 0) return '0 Byte';
 	const i = Math.floor(Math.log(bytes) / Math.log(1024));
 	return `${Math.round(bytes / 1024 ** i)} ${sizes[i]}`;
 }
 
-export function genString(length = 10) {
+export function gen_string(length = 10) {
 	let result = '';
-	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	const charactersLength = characters.length;
-	for (let i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
 	return result;
 }
 
 export async function try_prom<T>(prom: Promise<T> | T | undefined, log = true): Promise<NonNullable<T> | undefined> {
 	try {
 		const res = await prom;
-		if (res) {
-			return res;
-		}
+		if (res) return res;
 	} catch (e) {
-		if (log) {
-			console.error(e);
-		}
+		if (log) console.error(e);
 	}
 }
 
@@ -173,10 +164,6 @@ export function slugify(str: string) {
 		.toLowerCase()
 		.replace(/[^\w ]+/g, '')
 		.replace(/ +/g, '-');
-}
-
-export function wait(ms: number) {
-	return wait_prom(ms);
 }
 
 export function is_url(str: string) {
@@ -221,66 +208,35 @@ export const time_str = (
 
 export function relative_time(_date: number | Date | string) {
 	const date = typeof _date === 'string' ? parse_date(_date) : new Date(_date);
-
-	// like discord timestamps
-	// Today at 3:00 PM
-	// Yesterday at 3:00 PM
-	// 1/1/2021 3:00 PM
-
 	const now = new Date();
 	const diff = now.getTime() - date.getTime();
 	const day_diff = Math.floor(diff / 86400000);
-
 	if (Number.isNaN(day_diff) || day_diff < 0) return;
-
 	const get_time = (date: Date) => {
 		const hours = date.getHours();
 		const minutes = date.getMinutes();
 		const ampm = hours >= 12 ? 'PM' : 'AM';
 		return `${hours % 12 || 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 	};
-
 	if (day_diff === 0) return `Today at ${get_time(date)}`;
 	if (day_diff === 1) return `Yesterday at ${get_time(date)}`;
-
 	return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} at ${get_time(date)}`;
 }
 
-export function csv_to_array<Headers extends string>(csv: string, headers: Headers[]): Record<Headers, string>[] {
-	const lines = csv.split(/[\n]+/);
-	const result: Record<Headers, string>[] = [];
-	for (const line of lines) {
-		const row: Record<Headers, string> = {} as Record<Headers, string>;
-		const cells = line.split(',');
-		for (let i = 0; i < cells.length; i++) {
-			row[headers[i]] = cells[i];
-		}
-		result.push(row);
-	}
-
-	return result;
-}
-
-export function array_to_csv<T extends Record<string, string>>(array: Array<T>): string {
-	const lines: string[] = [];
-	for (const row of array) {
-		const line: string[] = [];
-		for (const key in row) {
-			line.push(row[key]);
-		}
-		lines.push(line.join(','));
-	}
-	return lines.join('\n');
-}
-
-export const emojiMention = (id: string) => `<:_:${id}>`;
+export const emoji_mention = (emoji: Emoji) => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+export const pluralize = (str: string, count: number) => (count === 1 ? str : `${str}s`);
 export const truncate = (str: string, len: number) => str.slice(0, len).trim() + (str.length > len ? '...' : '');
 
-export const turndownService = new TurndownService();
-export const turndown = (html: string) => turndownService.turndown(html);
+const _turndown_service = new TurndownService();
+export const turndown = (html: string) => _turndown_service.turndown(html);
+export const md5 = (input: string) => new Bun.MD5().update(input).digest('hex');
 
+export const useragent = (filter?: ConstructorParameters<typeof UserAgents>[0]) => new UserAgents(filter).toString();
+export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export * as fileType from 'file-type';
+export { filesize } from 'filesize';
 export * from 'meinu';
+export { basename, extname, join } from 'node:path';
 export * from './env.js';
 

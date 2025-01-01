@@ -1,3 +1,4 @@
+import { fun } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command } from '@kaede/utils';
 import type { Kaede } from '../../index.js';
 
@@ -21,12 +22,9 @@ export default new Command<Kaede>({
 }).addHandler('chatInput', async (bot, int) => {
 	const user = int.options.getUser('user', true);
 	const user2 = int.options.getUser('user2') ?? int.user;
-
-	const love = Math.random() * 100;
-	const loveIndex = Math.floor(love / 10);
-	const loveLevel = '❤️'.repeat(loveIndex) + '♡'.repeat(10 - loveIndex);
-
+	const love = fun.love.get(user.displayName, user2.displayName);
+	const hearts = fun.love.hearts(love);
 	return int.reply({
-		content: [`### ❤️ ${user} and ${user2} ❤️`, `### ${Math.floor(love)}%: ${loveLevel}`].join('\n'),
+		content: [`### ❤️ ${user} and ${user2} ❤️`, `### ${Math.floor(love)}%: ${hearts}`].join('\n'),
 	});
 });

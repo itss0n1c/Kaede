@@ -3,9 +3,11 @@ import {
 	ApplicationCommandOptionType,
 	ButtonBuilder,
 	ButtonStyle,
+	capitalize,
 	Command,
 	create_scroll_embed,
-	EmbedBuilder,
+	stream_to_attachment,
+	try_prom,
 } from '@kaede/utils';
 
 import { wallpaper } from '@kaede/apis';
@@ -26,20 +28,7 @@ export default new Command<Kaede>({
 			description: 'The category of the wallpaper',
 			type: ApplicationCommandOptionType.String,
 			required: false,
-			choices: [
-				{
-					name: 'General',
-					value: 'general',
-				},
-				{
-					name: 'Anime',
-					value: 'anime',
-				},
-				{
-					name: 'People',
-					value: 'people',
-				},
-			],
+			choices: ['general', 'anime', 'people'].map((v) => ({ name: capitalize(v), value: v })),
 		},
 		{
 			name: 'sorting',
@@ -76,26 +65,6 @@ export default new Command<Kaede>({
 				},
 			],
 		},
-		// {
-		// 	name: 'purity',
-		// 	description: 'Purity of the wallpaper',
-		// 	type: ApplicationCommandOptionType.String,
-
-		// 	choices: [
-		// 		{
-		// 			name: 'sfw',
-		// 			value: 'sfw',
-		// 		},
-		// 		{
-		// 			name: 'sketchy',
-		// 			value: 'sketchy',
-		// 		},
-		// 		{
-		// 			name: 'nsfw',
-		// 			value: 'nsfw',
-		// 		},
-		// 	],
-		// },
 		{
 			name: 'ratio',
 			description: 'Ratio of the wallpaper',
@@ -130,36 +99,18 @@ export default new Command<Kaede>({
 			min_value: 1,
 		},
 	],
-})
-	.hasPermission(async (bot, int) => {
-		if (int.isChatInputCommand()) {
-			const purity = (int.options.getString('purity') ?? 'sfw') as wallpaper.WallpaperPurity;
-			const { channel } = int;
-			if (!channel) {
-				return true;
-			}
+}).addHandler('chatInput', async (bot, int) => {
+	const query = int.options.getString('query');
+	const category = int.options.getString('category') as wallpaper.WallpaperCategory | null;
+	const sorting = (int.options.getString('sorting') ?? 'random') as wallpaper.WallpaperSorting | null;
+	const ratios = (int.options.getString('ratio') ?? 'allwide') as wallpaper.WallpaperRatio | null;
+	const page = int.options.getNumber('page') ?? 1;
+	await int.reply(bot.thinking);
 
-			if (purity !== 'sfw') {
-				if (channel.isTextBased() && !channel.isThread() && !channel.isVoiceBased() && !channel.isDMBased()) {
-					if (!channel.nsfw) {
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	})
-	.addHandler('chatInput', async (bot, int) => {
-		const query = int.options.getString('query');
-		const category = int.options.getString('category') as wallpaper.WallpaperCategory | null;
-		const sorting = (int.options.getString('sorting') ?? 'random') as wallpaper.WallpaperSorting | null;
-		// const purity = (int.options.getString('purity') ?? 'sfw') as wallpaper.WallpaperPurity | null;
-		const ratios = (int.options.getString('ratio') ?? 'allwide') as wallpaper.WallpaperRatio | null;
-		const page = int.options.getNumber('page') ?? 1;
-		await int.deferReply();
-
-		const search = async () => {
-			const res = await wallpaper.search_with_info({
+	await create_scroll_embed({
+		int,
+		data: () =>
+			wallpaper.search_with_info({
 				...(query && { q: query }),
 				...(category
 					? { categories: [category] }
@@ -168,57 +119,34 @@ export default new Command<Kaede>({
 						}),
 				sorting: sorting ?? undefined,
 				order: 'desc',
-				// ...(purity ? { purity: [purity] } : {}),
 				ratios: ratios ? ratios : undefined,
 				page,
-			});
+			}),
+		show_page_count: true,
+		fail_msg: bot.error_msg('no wallpapers were found!'),
+		match: async (val) => {
+			const file = await try_prom(stream_to_attachment(val.path, 'wallpaper.png'));
+			if (!file) return bot.error_msg(`i wasn't able to send the photo in this card ${bot.emotes('sad')}`);
 
-			if (!res.length)
-				return [
-					{
-						uploader: {
-							username: 'No_results',
-							avatar: {
-								'128px': 'https://example.com',
-							},
-						},
-						short_url: 'no results',
-						path: 'https://example.com',
-					},
-				] as wallpaper.WallpaperInfo[];
-			return res;
-		};
+			const row = new ActionRowBuilder<ButtonBuilder>().setComponents([
+				new ButtonBuilder()
+					.setStyle(ButtonStyle.Link)
+					.setLabel(`By ${val.uploader.username}`)
+					.setURL(val.short_url),
+				val.source
+					? new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('View Original').setURL(val.source)
+					: new ButtonBuilder()
+							.setStyle(ButtonStyle.Secondary)
+							.setCustomId('unknown_source')
+							.setDisabled(true)
+							.setLabel('Unknown Source'),
+			]);
 
-		try {
-			await create_scroll_embed({
-				int,
-				data: search,
-				match: (val, i, arr) => ({
-					embed:
-						val.short_url === 'no results'
-							? new EmbedBuilder().setTitle('no results found').setColor('Red')
-							: new EmbedBuilder()
-									.setURL(val.url)
-									.setImage(val.path)
-									.setAuthor({
-										name: val.uploader.username,
-										iconURL: val.uploader.avatar['128px'],
-										url: `https://wallhaven.cc/user/${val.uploader.username}`,
-									})
-									.setFooter({
-										text: `Page ${i + 1}/${arr.length}`,
-									}),
-					components: [
-						new ActionRowBuilder<ButtonBuilder>().setComponents([
-							new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Source').setURL(val.url),
-						]),
-					],
-				}),
-			});
-		} catch (e) {
-			console.error(e);
-			await int.editReply({
-				content: e instanceof Error ? e.message : 'Failed to get a wallpaper',
-			});
-		}
+			return {
+				content: '',
+				files: [file],
+				components: [row],
+			};
+		},
 	});
+});

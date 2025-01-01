@@ -1,11 +1,22 @@
 import * as apis from '@kaede/apis';
-import { type ColorResolvable, GatewayIntentBits, Meinu, Partials, Routes, get_env } from '@kaede/utils';
-import { KaedeAvatars } from './avatars.js';
+import {
+	ActivityType,
+	DefaultWebSocketManagerOptions,
+	GatewayIntentBits,
+	Meinu,
+	Partials,
+	Routes,
+	get_env,
+} from '@kaede/utils';
 import cmds from './cmds/index.js';
+import emotes from './emotes.js';
+import { init_server } from './server/index.js';
+
+(DefaultWebSocketManagerOptions.identifyProperties as Record<string, unknown>).browser = 'Discord iOS';
 
 export class Kaede extends Meinu {
-	avatars = new KaedeAvatars(this);
 	apis = apis;
+	emotes = emotes;
 	constructor() {
 		super({
 			name: 'Kaede',
@@ -13,12 +24,17 @@ export class Kaede extends Meinu {
 			clientOptions: {
 				intents: [GatewayIntentBits.Guilds],
 				partials: [Partials.Channel, Partials.Message],
+				presence: {
+					activities: [
+						{
+							type: ActivityType.Custom,
+							name: 'panda addict 🐼💞',
+						},
+					],
+					status: 'dnd',
+				},
 			},
 		});
-	}
-
-	get bot_color(): ColorResolvable {
-		return this.avatars.current_color ?? this.color;
 	}
 
 	get install_link(): string {
@@ -26,16 +42,24 @@ export class Kaede extends Meinu {
 		const url = new URL(Routes.oauth2Authorization(), this.options.rest?.api);
 		const params = new URLSearchParams();
 		params.append('client_id', this.application.id);
-		if (this.application.installParams?.scopes)
-			params.append('scope', this.application.installParams?.scopes.join(' '));
 		url.search = params.toString();
 		return url.toString();
 	}
 
-	static async start() {
-		const kaede = new Kaede();
-		return kaede.register_commands(cmds).init(get_env('DISCORD_TOKEN'));
+	static start = () => new Kaede().register_commands(cmds).init(get_env('DISCORD_TOKEN'));
+
+	get thinking() {
+		return `${this.emotes('thinking')} **Kaede** is thinking...`;
 	}
+
+	error_msg = (message: string) => ({
+		content: `# Uh oh ${this.emotes('surprised')}\n${message}`,
+		files: [],
+		components: [],
+	});
 }
 
-await Kaede.start();
+export const bot = await Kaede.start();
+await bot.application?.emojis.fetch();
+
+init_server();

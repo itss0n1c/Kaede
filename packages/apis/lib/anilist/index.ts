@@ -1,61 +1,8 @@
 import { truncate, turndown } from '@kaede/utils';
-import { anilist, type FuzzyDate, type MediaFormat, type MediaStatus, type MediaType } from 'anilist';
+import type { FuzzyDate, MediaFormat, MediaStatus } from 'anilist';
 
-export async function search(term: string, type: MediaType) {
-	const media_query = anilist.query
-		.media()
-		.withId()
-		.withTitles('userPreferred', 'english', 'native', 'romaji')
-		.withStatus()
-		.withFormat()
-		.arguments({
-			search: term,
-			type,
-		});
-	const res = await anilist.query
-		.page({
-			page: 1,
-			perPage: 10,
-		})
-		.withMedia(media_query)
-		.fetch();
-	return res.media;
-}
-
-export async function get(anime_id: number, type: MediaType) {
-	const query = anilist.query
-		.media()
-		.withId()
-		.withMalId()
-		.withTitles('userPreferred', 'english', 'native', 'romaji')
-		.withStatus()
-		.withFormat()
-		.withSiteUrl()
-		.withCoverImage('extraLarge', 'color')
-		.withBannerImage()
-		.withDescription(true)
-		.withAverageScore()
-		.withEpisodes()
-		.withChapters()
-		.withStartDate()
-		.withEndDate()
-		.withStaff({
-			pageInfo: (p) => p.withTotal(),
-			edges: (e) =>
-				e
-					.withId()
-					.withRole()
-					.withNode((n) =>
-						n.withId().withName('userPreferred').withLanguageV2().withSiteUrl().withImage('large'),
-					),
-			nodes: (n) => n.withId().withName('userPreferred').withLanguageV2().withSiteUrl().withImage('large'),
-		})
-		.arguments({
-			id: anime_id,
-			type,
-		});
-	return query.fetch();
-}
+export * from './character';
+export * from './media';
 
 export function humanize_status(status: MediaStatus | null) {
 	if (!status) return 'Unknown';
@@ -80,6 +27,21 @@ export function humanize_format(format: MediaFormat | null) {
 	if (format === 'NOVEL') return 'Novel';
 	if (format === 'ONE_SHOT') return 'One Shot';
 	return format;
+}
+
+export function emoji_format(format: MediaFormat | null) {
+	if (!format) return '❓';
+	if (format === 'TV') return '📺';
+	if (format === 'TV_SHORT') return '📺';
+	if (format === 'MOVIE') return '🎥';
+	if (format === 'SPECIAL') return '🎥';
+	if (format === 'OVA') return '📀';
+	if (format === 'ONA') return '📱';
+	if (format === 'MUSIC') return '🎵';
+	if (format === 'MANGA') return '📖';
+	if (format === 'NOVEL') return '📚';
+	if (format === 'ONE_SHOT') return '📚';
+	return '❓';
 }
 
 export const humanize_desc = (desc: string | null) =>

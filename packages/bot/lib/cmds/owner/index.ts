@@ -1,6 +1,6 @@
 import { Command } from '@kaede/utils';
+import type { Kaede } from '../../index.js';
 import evalc from './evalc.js';
-import { Kaede } from '../../index.js';
 
 export default new Command<Kaede>({
 	name: 'owner',

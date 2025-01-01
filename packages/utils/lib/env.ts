@@ -1,16 +1,20 @@
 import { config } from 'dotenv';
-import { join } from 'path';
+import { mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
 
 export const proj_root = join(import.meta.url.replace('file://', ''), '../../../..');
 export const dbs_root = join(proj_root, 'dbs');
+
+await mkdir(dbs_root, { recursive: true });
 
 config({
 	path: join(proj_root, '.env'),
 });
 
 type BotEnv = 'DISCORD_TOKEN' | 'DISCORD_CLIENT_ID' | 'DISCORD_CLIENT_SECRET';
-
-type KaedeEnv = BotEnv;
+type APIEnv = 'API_HOST' | 'API_PORT';
+type WHEnv = 'WH_API_KEY';
+type KaedeEnv = BotEnv | APIEnv | WHEnv;
 
 export function get_env<T extends 'string' | 'number' = 'string', V = T extends 'string' ? string : number>(
 	env: KaedeEnv,
