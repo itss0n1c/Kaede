@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"declaration": false,
 		"forceConsistentCasingInFileNames": true,
-		"lib": ["ESNext"],
+		"lib": ["ESNext", "DOM.AsyncIterable"],
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"resolveJsonModule": true,

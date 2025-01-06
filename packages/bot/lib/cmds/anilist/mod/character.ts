@@ -1,17 +1,17 @@
 import { anilist } from '@kaede/apis';
 import { humanize_desc, humanize_status } from '@kaede/apis/lib/anilist';
 import {
-	ActionRowBuilder,
-	ApplicationCommandOptionType,
-	AttachmentBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	Command,
-	EmbedBuilder,
-	get_buf,
-	get_image_color,
-	truncate,
-	try_prom,
+    ActionRowBuilder,
+    ApplicationCommandOptionType,
+    AttachmentBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    Command,
+    EmbedBuilder,
+    get_buf,
+    get_image_color,
+    truncate,
+    try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../..';
 
@@ -40,7 +40,7 @@ export default new Command<Kaede>({
 			})),
 		);
 	})
-	.addHandler('chatInput', async (bot, int) => {
+	.addHandler('chat_input', async (bot, int) => {
 		await int.reply(bot.thinking);
 		const _id = int.options.getString('character_id', true);
 		const id = Number.parseInt(_id);

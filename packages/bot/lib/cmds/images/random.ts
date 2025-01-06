@@ -1,20 +1,20 @@
 import { images } from '@kaede/apis';
 import {
-	ActionRowBuilder,
-	AttachmentBuilder,
-	basename,
-	ButtonBuilder,
-	ButtonStyle,
-	Command,
-	get_stream_node,
-	try_prom,
+    ActionRowBuilder,
+    AttachmentBuilder,
+    basename,
+    ButtonBuilder,
+    ButtonStyle,
+    Command,
+    get_stream_node,
+    try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../..';
 
 export default new Command<Kaede>({
 	name: 'random',
 	description: 'Get a random pic',
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	await int.reply(bot.thinking);
 	const res = await try_prom(images.random.get());
 	if (!res) return int.editReply({ content: 'Not found' });

@@ -1,16 +1,16 @@
 import { images } from '@kaede/apis';
 import {
-	ActionRowBuilder,
-	ApplicationCommandOptionType,
-	AttachmentBuilder,
-	basename,
-	ButtonBuilder,
-	ButtonStyle,
-	type ChatInputCommandInteraction,
-	Command,
-	get_stream_node,
-	is_url,
-	try_prom,
+    ActionRowBuilder,
+    ApplicationCommandOptionType,
+    AttachmentBuilder,
+    basename,
+    ButtonBuilder,
+    ButtonStyle,
+    type ChatInputCommandInteraction,
+    Command,
+    get_stream_node,
+    is_url,
+    try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../index.js';
 import { multi_user, single_user } from './reactions/index.js';
@@ -94,7 +94,7 @@ const make_cmds = (categories: Array<AnyCategory>) =>
 						],
 					}
 				: {}),
-		}).addHandler('chatInput', async (bot, int) => res(v, bot, int)),
+		}).addHandler('chat_input', async (bot, int) => res(v, bot, int)),
 	);
 
 export default new Command<Kaede>({

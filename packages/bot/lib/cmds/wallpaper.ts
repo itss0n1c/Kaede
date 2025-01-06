@@ -5,7 +5,7 @@ import {
 	ButtonStyle,
 	capitalize,
 	Command,
-	create_scroll_embed,
+	create_scrollable,
 	stream_to_attachment,
 	try_prom,
 } from '@kaede/utils';
@@ -99,7 +99,7 @@ export default new Command<Kaede>({
 			min_value: 1,
 		},
 	],
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	const query = int.options.getString('query');
 	const category = int.options.getString('category') as wallpaper.WallpaperCategory | null;
 	const sorting = (int.options.getString('sorting') ?? 'random') as wallpaper.WallpaperSorting | null;
@@ -107,7 +107,7 @@ export default new Command<Kaede>({
 	const page = int.options.getNumber('page') ?? 1;
 	await int.reply(bot.thinking);
 
-	await create_scroll_embed({
+	await create_scrollable({
 		int,
 		data: () =>
 			wallpaper.search_with_info({

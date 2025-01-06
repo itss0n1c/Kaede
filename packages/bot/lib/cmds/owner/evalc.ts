@@ -18,7 +18,7 @@ export default new Command<Kaede>({
 			type: ApplicationCommandOptionType.Boolean,
 		},
 	],
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	const script = int.options.getString('script', true);
 	const asFile = int.options.getBoolean('as_file') ?? false;
 

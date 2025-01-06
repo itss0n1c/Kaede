@@ -1,18 +1,18 @@
 import { anilist } from '@kaede/apis';
 import { humanize_desc } from '@kaede/apis/lib/anilist';
 import {
-	ActionRowBuilder,
-	ApplicationCommandOptionType,
-	AttachmentBuilder,
-	type AutocompleteInteraction,
-	ButtonBuilder,
-	ButtonStyle,
-	type ChatInputCommandInteraction,
-	Command,
-	EmbedBuilder,
-	get_buf,
-	truncate,
-	try_prom,
+    ActionRowBuilder,
+    ApplicationCommandOptionType,
+    AttachmentBuilder,
+    type AutocompleteInteraction,
+    ButtonBuilder,
+    ButtonStyle,
+    type ChatInputCommandInteraction,
+    Command,
+    EmbedBuilder,
+    get_buf,
+    truncate,
+    try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../..';
 
@@ -120,6 +120,6 @@ const media_cmd = (type: MType) =>
 		],
 	})
 		.addHandler('autocomplete', handle_autocomplete(type))
-		.addHandler('chatInput', handle_chat(type));
+		.addHandler('chat_input', handle_chat(type));
 
 export default media_types.map(media_cmd);

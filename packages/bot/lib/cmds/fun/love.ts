@@ -19,7 +19,7 @@ export default new Command<Kaede>({
 			type: ApplicationCommandOptionType.User,
 		},
 	],
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	const user = int.options.getUser('user', true);
 	const user2 = int.options.getUser('user2') ?? int.user;
 	const love = fun.love.get(user.displayName, user2.displayName);

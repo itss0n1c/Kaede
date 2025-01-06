@@ -22,7 +22,7 @@ import type { Kaede } from '../index.js';
 export default new Command<Kaede>({
 	name: 'info',
 	description: 'Information about Kaede',
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	await int.reply(bot.thinking);
 
 	const time_since = process.uptime() * 1000;
@@ -57,7 +57,7 @@ export default new Command<Kaede>({
 				'',
 				'Made with ❤️ by [S0n1c](https://s0n1c.ca)',
 				'',
-				`-# Made with [Meinu v${bot.meinu_version}](https://github.com/itss0n1c/meinu)`,
+				`-# Made with [Meinu v${bot.meinuVersion}](https://github.com/itss0n1c/meinu)`,
 				'-# developed on the [Bun runtime](https://bun.sh).',
 			].join('\n'),
 		)

@@ -21,7 +21,7 @@ export class Kaede extends Meinu {
 		super({
 			name: 'Kaede',
 			color: '#f2d9c3',
-			clientOptions: {
+			client_options: {
 				intents: [GatewayIntentBits.Guilds],
 				partials: [Partials.Channel, Partials.Message],
 				presence: {
@@ -46,7 +46,7 @@ export class Kaede extends Meinu {
 		return url.toString();
 	}
 
-	static start = () => new Kaede().register_commands(cmds).init(get_env('DISCORD_TOKEN'));
+	static start = () => new Kaede().registerCommands(cmds).init(get_env('DISCORD_TOKEN'));
 
 	get thinking() {
 		return `${this.emotes('thinking')} **Kaede** is thinking...`;

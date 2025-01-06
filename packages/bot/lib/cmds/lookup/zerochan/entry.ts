@@ -14,7 +14,7 @@ export default new Command<Kaede>({
 			required: true,
 		},
 	],
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	await int.reply(bot.thinking);
 
 	const id = int.options.getInteger('id', true);

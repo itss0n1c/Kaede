@@ -6,13 +6,12 @@
 		"dev": "nodemon -w lib/ -e ts --exec bun test"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
 		"@types/bun": "1.1.14"
 	},
 	"dependencies": {
 		"@kaede/utils": "workspace:*",
-		"anilist": "^0.12.4",
-		"bun.db": "^1.0.1",
-		"exit": "^0.1.2"
+		"anilist": "0.12.4",
+		"bun.db": "1.0.1",
+		"exit": "0.1.2"
 	}
 }

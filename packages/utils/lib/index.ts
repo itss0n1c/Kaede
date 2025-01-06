@@ -60,7 +60,7 @@ export const get_text = (url: string, option: ReqInit = {}) =>
 export const get_buf = (url: string, option: ReqInit = {}) =>
 	fetch(url, { ...option, require_body: true }).then((res) => res.arrayBuffer().then((buf) => Buffer.from(buf)));
 export const get_stream = (url: string, option: ReqInit = {}) =>
-	fetch(url, { ...option, require_body: true }).then((res) => res.body as ReadableStream<ArrayBufferLike>);
+	fetch(url, { ...option, require_body: true }).then((res) => res.body as ReadableStream<Uint8Array>);
 
 export interface ReqClientInit {
 	path: string;
@@ -85,6 +85,7 @@ export function api_request_client(base: string) {
 
 export async function get_stream_node(url: string, option: ReqInit = {}): Promise<Stream> {
 	const res = await get_stream(url, option);
+	if (!res) throw new Error('Invalid response');
 	const stream = new Stream.PassThrough();
 	for await (const chunk of res) {
 		stream.write(chunk);

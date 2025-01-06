@@ -3,14 +3,14 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	create_scroll_embed,
+	create_scrollable,
 	EmbedBuilder,
 	filesize,
 	inline_code,
 	is_url,
-	type MatchedEmbed,
 	type Message,
 	type RepliableInteraction,
+	type ScrollableContent,
 	stream_to_attachment,
 	try_prom,
 } from '@kaede/utils';
@@ -21,7 +21,7 @@ export async function partial_scroll(
 	res: () => Promise<zerochan.ZeroPartialEntry[]>,
 	int: RepliableInteraction,
 ) {
-	return create_scroll_embed({
+	return create_scrollable({
 		int,
 		data: res,
 		show_page_count: true,
@@ -38,7 +38,7 @@ function partial_entry_to_embed(bot: Kaede) {
 		entry: zerochan.ZeroPartialEntry,
 		i: number,
 		arr: Array<zerochan.ZeroPartialEntry>,
-	): Promise<MatchedEmbed> => {
+	): Promise<ScrollableContent> => {
 		const file = await try_prom(stream_to_attachment(large_img_link(entry.id, entry.tag), 'thumbnail.png'));
 		if (!file) return bot.error_msg("I wasn't able to get the image...");
 

@@ -4,7 +4,7 @@ import type { Kaede } from '../index.js';
 export default new Command<Kaede>({
 	name: 'ping',
 	description: 'Pong!',
-}).addHandler('chatInput', async (bot, int) => {
+}).addHandler('chat_input', async (bot, int) => {
 	const date = Date.now();
 	await int.reply(bot.thinking);
 	const diff = Date.now() - date;

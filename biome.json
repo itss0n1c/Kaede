@@ -19,7 +19,7 @@
 		"rules": {
 			"recommended": true,
 			"correctness": {
-				"noUnusedImports": "error"
+				"noUnusedImports": "off"
 			}
 		}
 	}

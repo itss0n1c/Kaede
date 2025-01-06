@@ -12,7 +12,7 @@ import {
 	type MessageContextMenuCommandInteraction,
 	type RepliableInteraction,
 	type UserContextMenuCommandInteraction,
-	create_scroll_embed,
+	create_scrollable,
 	extname,
 	stream_to_attachment,
 	try_prom,
@@ -22,9 +22,9 @@ import { trace } from '@kaede/apis';
 import type { Kaede } from '../../index.js';
 
 interface HandleTypes {
-	chatInput: ChatInputCommandInteraction;
-	userContextMenu: UserContextMenuCommandInteraction;
-	messageContextMenu: MessageContextMenuCommandInteraction;
+	chat_input: ChatInputCommandInteraction;
+	user_context_menu: UserContextMenuCommandInteraction;
+	message_context_menu: MessageContextMenuCommandInteraction;
 }
 
 function seconds_to_minutes(seconds: number): string {
@@ -34,7 +34,7 @@ function seconds_to_minutes(seconds: number): string {
 }
 
 async function handle_res(bot: Kaede, res: trace.TraceRes, int: RepliableInteraction) {
-	await create_scroll_embed({
+	await create_scrollable({
 		int,
 		data: () => res.items,
 		show_page_count: true,
@@ -141,11 +141,11 @@ function handle_image<Type extends keyof HandleTypes>(type: Type): (bot: Kaede, 
 	return async (bot, int) => {
 		await int.reply(bot.thinking);
 		switch (type) {
-			case 'chatInput':
+			case 'chat_input':
 				return handle_chat(bot, int as ChatInputCommandInteraction);
-			case 'userContextMenu':
+			case 'user_context_menu':
 				return handle_user(bot, int as UserContextMenuCommandInteraction);
-			case 'messageContextMenu':
+			case 'message_context_menu':
 				return handle_message(bot, int as MessageContextMenuCommandInteraction);
 		}
 	};
@@ -162,15 +162,15 @@ export default new Command<Kaede>({
 			required: true,
 		},
 	],
-}).addHandler('chatInput', handle_image('chatInput'));
+}).addHandler('chat_input', handle_image('chat_input'));
 
 export const lookup_anime_contexts = [
 	new Command<Kaede>({
 		name: 'Search Anime',
 		type: ApplicationCommandType.User,
-	}).addHandler('userContextMenu', handle_image('userContextMenu')),
+	}).addHandler('user_context_menu', handle_image('user_context_menu')),
 	new Command<Kaede>({
 		name: 'Search Anime GIF',
 		type: ApplicationCommandType.Message,
-	}).addHandler('messageContextMenu', handle_image('messageContextMenu')),
+	}).addHandler('message_context_menu', handle_image('message_context_menu')),
 ];

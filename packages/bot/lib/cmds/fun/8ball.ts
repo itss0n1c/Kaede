@@ -13,7 +13,7 @@ export default new Command<Kaede>({
 			type: ApplicationCommandOptionType.String,
 		},
 	],
-}).addHandler('chatInput', (bot, int) => {
+}).addHandler('chat_input', (bot, int) => {
 	const q = int.options.getString('question', true);
 	const { question, answer, color } = fun.eight_ball.get(q);
 	const embed = new EmbedBuilder()

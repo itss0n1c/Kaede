@@ -1,15 +1,15 @@
 import type { images } from '@kaede/apis';
 import {
-	ActionRowBuilder,
-	AttachmentBuilder,
-	basename,
-	ButtonBuilder,
-	ButtonStyle,
-	type ChatInputCommandInteraction,
-	Command,
-	get_buf,
-	is_url,
-	try_prom,
+    ActionRowBuilder,
+    AttachmentBuilder,
+    basename,
+    ButtonBuilder,
+    ButtonStyle,
+    type ChatInputCommandInteraction,
+    Command,
+    get_buf,
+    is_url,
+    try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../..';
 import random from './random';
@@ -59,7 +59,7 @@ const cmds = (['husbando', 'kitsune', 'neko', 'waifu'] as const).map((k) =>
 	new Command<Kaede>({
 		name: k,
 		description: `Get a ${k} image`,
-	}).addHandler('chatInput', handle_chat(k)),
+	}).addHandler('chat_input', handle_chat(k)),
 );
 
 export default new Command<Kaede>({

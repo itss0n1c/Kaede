@@ -5,5 +5,5 @@ import evalc from './evalc.js';
 export default new Command<Kaede>({
 	name: 'owner',
 	description: 'owner commands',
-	ownersOnly: true,
+	owners_only: true,
 }).addSubCommands([evalc]);
