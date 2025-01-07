@@ -1,18 +1,19 @@
 import type { images } from '@kaede/apis';
 import {
-    ActionRowBuilder,
-    AttachmentBuilder,
-    basename,
-    ButtonBuilder,
-    ButtonStyle,
-    type ChatInputCommandInteraction,
-    Command,
-    get_buf,
-    is_url,
-    try_prom,
+	ActionRowBuilder,
+	AttachmentBuilder,
+	basename,
+	ButtonBuilder,
+	ButtonStyle,
+	type ChatInputCommandInteraction,
+	Command,
+	get_buf,
+	is_url,
+	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot';
 import random from './random';
+import wallpaper from './wallpaper';
 
 function handle_chat<K extends images.nekos.ImageCategories['img'][number]>(k: K) {
 	return async (bot: Kaede, int: ChatInputCommandInteraction) => {
@@ -65,4 +66,4 @@ const cmds = (['husbando', 'kitsune', 'neko', 'waifu'] as const).map((k) =>
 export default new Command<Kaede>({
 	name: 'images',
 	description: 'image commands',
-}).addSubCommands([...cmds, random]);
+}).addSubCommands([...cmds, random, wallpaper]);

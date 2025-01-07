@@ -1,17 +1,17 @@
 import {
-    ActionRowBuilder,
-    ApplicationCommandOptionType,
-    ButtonBuilder,
-    ButtonStyle,
-    capitalize,
-    Command,
-    create_scrollable,
-    stream_to_attachment,
-    try_prom,
+	ActionRowBuilder,
+	ApplicationCommandOptionType,
+	ButtonBuilder,
+	ButtonStyle,
+	capitalize,
+	Command,
+	create_scrollable,
+	stream_to_attachment,
+	try_prom,
 } from '@kaede/utils';
 
-import { wallpaper } from '@kaede/apis';
-import type { Kaede } from '../bot.js';
+import { images } from '@kaede/apis';
+import type { Kaede } from '../../bot.js';
 
 export default new Command<Kaede>({
 	name: 'wallpaper',
@@ -101,21 +101,21 @@ export default new Command<Kaede>({
 	],
 }).addHandler('chat_input', async (bot, int) => {
 	const query = int.options.getString('query');
-	const category = int.options.getString('category') as wallpaper.WallpaperCategory | null;
-	const sorting = (int.options.getString('sorting') ?? 'random') as wallpaper.WallpaperSorting | null;
-	const ratios = (int.options.getString('ratio') ?? 'allwide') as wallpaper.WallpaperRatio | null;
+	const category = int.options.getString('category') as images.wallpaper.WallpaperCategory | null;
+	const sorting = (int.options.getString('sorting') ?? 'random') as images.wallpaper.WallpaperSorting | null;
+	const ratios = (int.options.getString('ratio') ?? 'allwide') as images.wallpaper.WallpaperRatio | null;
 	const page = int.options.getNumber('page') ?? 1;
 	await int.reply(bot.thinking);
 
 	await create_scrollable({
 		int,
 		data: () =>
-			wallpaper.search_with_info({
+			images.wallpaper.search_with_info({
 				...(query && { q: query }),
 				...(category
 					? { categories: [category] }
 					: {
-							categories: ['general', 'anime'],
+							categories: ['anime'],
 						}),
 				sorting: sorting ?? undefined,
 				order: 'desc',
