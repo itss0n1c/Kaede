@@ -17,7 +17,7 @@ import {
 } from '@kaede/utils';
 import { cpu } from 'node-os-utils';
 import { totalmem } from 'node:os';
-import type { Kaede } from '../index.js';
+import type { Kaede } from '../bot.js';
 
 export default new Command<Kaede>({
 	name: 'info',
@@ -34,36 +34,33 @@ export default new Command<Kaede>({
 	const cpu_usage_percent = await cpu.usage();
 	const cpu_usage = `${cpu_usage_percent.toFixed(2)}%`;
 
-	const servers_count = bot.guilds.cache.size;
+	const shard_id = bot.shardId?.toString();
+	const [servers_count, members_count] = await Promise.all([bot.guildCount(), bot.memberCount()]);
 	const users_count = bot.application?.approximateUserInstallCount;
 	const cmds_count = bot.commands.reduce((a, b) => a + b.subcommands.length, 0);
 
 	const bun_version = process.versions.bun ?? 'N/A';
-	const node_version = process.versions.node ?? 'N/A';
-	const webkit_version = process.versions.webkit ?? 'N/A';
 
 	const embed = new EmbedBuilder()
 		.setDescription(
 			[
 				`### ${bot.name}`,
-				`I've been added to **${servers_count.toLocaleString()} ${pluralize('server', servers_count)}**.`,
-				`About **${users_count?.toLocaleString() ?? 'N/A'} ${pluralize('user', users_count ?? 0)}** have me installed.`,
+				`I've been added to **${servers_count.toLocaleString()} ${pluralize('server', servers_count)}**,\nwith a total of **${members_count.toLocaleString()} ${pluralize('member', members_count)}**.`,
+				`About **${users_count?.toLocaleString() ?? 'N/A'} ${pluralize('user', users_count ?? 0)}** have me installed directly.`,
 				`**${cmds_count.toLocaleString()} ${pluralize('command', cmds_count)}** available.`,
 
 				'### Server Info',
+				`**Shard**: ${inlineCode(shard_id ? `#${shard_id}` : 'N/A')}`,
 				`**Uptime:** ${uptime}`,
 				`**Memory:** ${inlineCode(memory_usage)}`,
 				`**CPU:** ${inlineCode(cpu_usage)}`,
 				'',
 				'Made with ❤️ by [S0n1c](https://s0n1c.ca)',
 				'',
-				`-# Made with [Meinu v${bot.meinuVersion}](https://github.com/itss0n1c/meinu)`,
-				'-# developed on the [Bun runtime](https://bun.sh).',
+				`-# Made with [Meinu v${bot.meinuVersion}](https://s0n1c.ca/meinu)`,
+				`-# Running on [Bun v${bun_version}](https://bun.sh).`,
 			].join('\n'),
 		)
-		.setFooter({
-			text: `Bun: ${bun_version} | Node API: ${node_version} | WebKit: ${webkit_version}`,
-		})
 		.setColor(bot.color);
 
 	const files: AttachmentBuilder[] = [];

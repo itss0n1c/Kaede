@@ -9,7 +9,7 @@ import {
     get_stream_node,
     try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../..';
+import type { Kaede } from '../../bot';
 
 export default new Command<Kaede>({
 	name: 'random',

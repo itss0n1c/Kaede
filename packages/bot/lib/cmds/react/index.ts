@@ -12,7 +12,7 @@ import {
     is_url,
     try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../index.js';
+import type { Kaede } from '../../bot.js';
 import { multi_user, single_user } from './reactions/index.js';
 import type { AnyCategory, Category, CuteResponseCB, CuteResponseData, Mentionable } from './types.js';
 

@@ -1,13 +1,15 @@
-import { ApplicationIntegrationType, InteractionContextType } from '@kaede/utils';
+import { ApplicationIntegrationType, get_default_cmds, InteractionContextType } from '@kaede/utils';
+import type { Kaede } from '../bot.js';
 import anilist from './anilist/index.js';
 import fun from './fun/index.js';
 import images from './images/index.js';
 import info from './info.js';
 import lookup from './lookup/index.js';
 import owner from './owner/index.js';
-import ping from './ping.js';
 import react from './react/index.js';
 import wallpaper from './wallpaper.js';
+
+const { ping } = get_default_cmds<Kaede>();
 
 const cmds = [owner, ping, info, wallpaper, fun, ...anilist, ...lookup, react, images];
 

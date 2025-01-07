@@ -14,7 +14,7 @@ import {
     truncate,
     try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../..';
+import type { Kaede } from '../../bot';
 
 const media_types = ['anime', 'manga'] as const;
 type MType = (typeof media_types)[number];

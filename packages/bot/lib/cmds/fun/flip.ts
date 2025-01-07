@@ -1,6 +1,6 @@
 import { fun } from '@kaede/apis';
 import { Command, capitalize } from '@kaede/utils';
-import type { Kaede } from '../../index.js';
+import type { Kaede } from '../../bot.js';
 
 export default new Command<Kaede>({
 	name: 'flip',

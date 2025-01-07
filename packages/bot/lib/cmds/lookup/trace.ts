@@ -1,25 +1,25 @@
 import {
-	ActionRowBuilder,
-	ApplicationCommandOptionType,
-	ApplicationCommandType,
-	type AttachmentBuilder,
-	type BaseInteraction,
-	ButtonBuilder,
-	ButtonStyle,
-	type ChatInputCommandInteraction,
-	Command,
-	type Message,
-	type MessageContextMenuCommandInteraction,
-	type RepliableInteraction,
-	type UserContextMenuCommandInteraction,
-	create_scrollable,
-	extname,
-	stream_to_attachment,
-	try_prom,
+    ActionRowBuilder,
+    ApplicationCommandOptionType,
+    ApplicationCommandType,
+    type AttachmentBuilder,
+    type BaseInteraction,
+    ButtonBuilder,
+    ButtonStyle,
+    type ChatInputCommandInteraction,
+    Command,
+    type Message,
+    type MessageContextMenuCommandInteraction,
+    type RepliableInteraction,
+    type UserContextMenuCommandInteraction,
+    create_scrollable,
+    extname,
+    stream_to_attachment,
+    try_prom,
 } from '@kaede/utils';
 
 import { trace } from '@kaede/apis';
-import type { Kaede } from '../../index.js';
+import type { Kaede } from '../../bot.js';
 
 interface HandleTypes {
 	chat_input: ChatInputCommandInteraction;

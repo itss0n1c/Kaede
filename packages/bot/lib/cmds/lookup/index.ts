@@ -1,5 +1,5 @@
 import { Command } from '@kaede/utils';
-import type { Kaede } from '../..';
+import type { Kaede } from '../../bot';
 import trace, { lookup_anime_contexts } from './trace';
 import zerochan from './zerochan';
 

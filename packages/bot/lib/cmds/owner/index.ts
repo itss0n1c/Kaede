@@ -1,5 +1,5 @@
 import { Command } from '@kaede/utils';
-import type { Kaede } from '../../index.js';
+import type { Kaede } from '../../bot.js';
 import evalc from './evalc.js';
 
 export default new Command<Kaede>({

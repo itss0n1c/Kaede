@@ -1,17 +1,17 @@
 import {
-	ActionRowBuilder,
-	ApplicationCommandOptionType,
-	ButtonBuilder,
-	ButtonStyle,
-	capitalize,
-	Command,
-	create_scrollable,
-	stream_to_attachment,
-	try_prom,
+    ActionRowBuilder,
+    ApplicationCommandOptionType,
+    ButtonBuilder,
+    ButtonStyle,
+    capitalize,
+    Command,
+    create_scrollable,
+    stream_to_attachment,
+    try_prom,
 } from '@kaede/utils';
 
 import { wallpaper } from '@kaede/apis';
-import type { Kaede } from '../index.js';
+import type { Kaede } from '../bot.js';
 
 export default new Command<Kaede>({
 	name: 'wallpaper',

@@ -11,7 +11,7 @@ import {
     is_url,
     try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../..';
+import type { Kaede } from '../../bot';
 import random from './random';
 
 function handle_chat<K extends images.nekos.ImageCategories['img'][number]>(k: K) {

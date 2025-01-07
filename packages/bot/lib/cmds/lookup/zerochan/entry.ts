@@ -1,6 +1,6 @@
 import type { zerochan } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command } from '@kaede/utils';
-import type { Kaede } from '../../..';
+import type { Kaede } from '../../../bot';
 import { send_entry } from './util';
 
 export default new Command<Kaede>({

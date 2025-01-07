@@ -1,20 +1,20 @@
 import type { zerochan } from '@kaede/apis';
 import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	create_scrollable,
-	EmbedBuilder,
-	filesize,
-	inline_code,
-	is_url,
-	type Message,
-	type RepliableInteraction,
-	type ScrollableContent,
-	stream_to_attachment,
-	try_prom,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    create_scrollable,
+    EmbedBuilder,
+    filesize,
+    inline_code,
+    is_url,
+    type Message,
+    type RepliableInteraction,
+    type ScrollableContent,
+    stream_to_attachment,
+    try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../..';
+import type { Kaede } from '../../../bot';
 
 export async function partial_scroll(
 	bot: Kaede,

@@ -1,6 +1,6 @@
 import { get_buf, get_env } from '@kaede/utils';
 import { Elysia } from 'elysia';
-import { bot } from '..';
+import { bot } from '../bot';
 
 const port = get_env('API_PORT', 'number');
 export async function init_server() {

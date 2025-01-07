@@ -1,6 +1,6 @@
 import { zerochan } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command, try_prom } from '@kaede/utils';
-import type { Kaede } from '../../..';
+import type { Kaede } from '../../../bot';
 import { partial_scroll } from './util';
 
 export default new Command<Kaede>({

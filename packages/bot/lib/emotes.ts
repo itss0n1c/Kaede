@@ -1,5 +1,5 @@
 import { emoji_mention } from '@kaede/utils';
-import { bot } from '.';
+import { bot } from './bot';
 
 const make_emoji = <Slug extends string, isAnimated extends boolean>(
 	slug: Slug,

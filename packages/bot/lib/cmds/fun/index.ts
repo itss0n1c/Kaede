@@ -1,5 +1,5 @@
 import { Command } from '@kaede/utils';
-import type { Kaede } from '../..';
+import type { Kaede } from '../../bot';
 import eight_ball from './8ball';
 import flip from './flip';
 import roll from './roll';
