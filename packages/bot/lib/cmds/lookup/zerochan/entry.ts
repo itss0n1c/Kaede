@@ -1,4 +1,4 @@
-import type { zerochan } from '@kaede/apis';
+import { lookup } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command } from '@kaede/utils';
 import type { Kaede } from '../../../bot';
 import { send_entry } from './util';
@@ -19,10 +19,10 @@ export default new Command<Kaede>({
 
 	const id = int.options.getInteger('id', true);
 
-	let res: zerochan.ZeroEntry;
+	let res: lookup.zerochan.ZeroEntry;
 
 	try {
-		res = await bot.apis.zerochan.entry(id);
+		res = await lookup.zerochan.entry(id);
 	} catch (e) {
 		return int.editReply({
 			content: `An error occurred while fetching the entry: ${e instanceof Error ? e.message : e}`,

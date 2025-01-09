@@ -1,5 +1,6 @@
 import { Command } from '@kaede/utils';
 import type { Kaede } from '../../bot';
+import { saucenao, saucenao_contexts } from './saucenao';
 import trace, { lookup_anime_contexts } from './trace';
 import zerochan from './zerochan';
 
@@ -13,6 +14,7 @@ export default [
 			description: 'Zerochan commands',
 			commands: zerochan,
 		})
-		.addSubCommands([trace]),
+		.addSubCommands([trace, saucenao]),
 	...lookup_anime_contexts,
+	...saucenao_contexts,
 ];

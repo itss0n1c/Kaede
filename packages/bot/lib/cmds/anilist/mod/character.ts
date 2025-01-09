@@ -1,17 +1,16 @@
 import { anilist } from '@kaede/apis';
-import { humanize_desc, humanize_status } from '@kaede/apis/lib/anilist';
 import {
-    ActionRowBuilder,
-    ApplicationCommandOptionType,
-    AttachmentBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    Command,
-    EmbedBuilder,
-    get_buf,
-    get_image_color,
-    truncate,
-    try_prom,
+	ActionRowBuilder,
+	ApplicationCommandOptionType,
+	AttachmentBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Command,
+	EmbedBuilder,
+	get_buf,
+	get_image_color,
+	truncate,
+	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../../bot';
 
@@ -55,7 +54,7 @@ export default new Command<Kaede>({
 
 		const name = res.name?.userPreferred;
 		const cover = res.image?.large;
-		const desc = humanize_desc(res.description);
+		const desc = anilist.humanize_desc(res.description);
 		const age = res.age;
 		const gender = res.gender;
 		const blood_type = res.bloodType;
@@ -85,7 +84,7 @@ export default new Command<Kaede>({
 								medias
 									.map(
 										(m) =>
-											`${anilist.emoji_format(m.format)} [${truncate(m.title?.userPreferred ?? 'N/A', 30)} • ${humanize_status(m.status)}](${m.siteUrl})`,
+											`${anilist.emoji_format(m.format)} [${truncate(m.title?.userPreferred ?? 'N/A', 30)} • ${anilist.humanize_status(m.status)}](${m.siteUrl})`,
 									)
 									.slice(0, 5)
 									.join('\n') + (medias.length > 5 ? `\n and ${medias.length - 5} more` : ''),

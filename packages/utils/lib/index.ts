@@ -176,6 +176,8 @@ export function is_url(str: string) {
 	}
 }
 
+export const to_png = (buf: Buffer) => sharp(buf).png().toBuffer();
+
 export async function get_image_color(image: Buffer | string, muted = false) {
 	const buf = typeof image === 'string' ? await get_buf(image) : image;
 	const img = await sharp(buf).png().toBuffer();

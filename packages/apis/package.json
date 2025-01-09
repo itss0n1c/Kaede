@@ -1,7 +1,10 @@
 {
 	"name": "@kaede/apis",
-	"main": "./lib/index.ts",
 	"type": "module",
+	"main": "./lib/index.ts",
+	"exports": {
+		".": "./lib/index.ts"
+	},
 	"scripts": {
 		"dev": "nodemon -w lib/ -e ts --exec bun test"
 	},
@@ -11,6 +14,7 @@
 	"dependencies": {
 		"@kaede/utils": "workspace:*",
 		"anilist": "0.12.4",
+		"sagiri": "4.3.0",
 		"bun.db": "1.0.1",
 		"exit": "0.1.2"
 	}

@@ -1,18 +1,17 @@
 import { anilist } from '@kaede/apis';
-import { humanize_desc } from '@kaede/apis/lib/anilist';
 import {
-    ActionRowBuilder,
-    ApplicationCommandOptionType,
-    AttachmentBuilder,
-    type AutocompleteInteraction,
-    ButtonBuilder,
-    ButtonStyle,
-    type ChatInputCommandInteraction,
-    Command,
-    EmbedBuilder,
-    get_buf,
-    truncate,
-    try_prom,
+	ActionRowBuilder,
+	ApplicationCommandOptionType,
+	AttachmentBuilder,
+	type AutocompleteInteraction,
+	ButtonBuilder,
+	ButtonStyle,
+	type ChatInputCommandInteraction,
+	Command,
+	EmbedBuilder,
+	get_buf,
+	truncate,
+	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot';
 
@@ -50,7 +49,7 @@ const handle_chat = (type: MType) => async (bot: Kaede, int: ChatInputCommandInt
 	const cover = res.coverImage?.extraLarge;
 	const color = res.coverImage?.color;
 	const banner = res.bannerImage;
-	const desc = humanize_desc(res.description);
+	const desc = anilist.humanize_desc(res.description);
 	const site_url = res.siteUrl ?? `https://anilist.co/${type}/${id}`;
 	const mal_site_url = res.idMal ? `https://myanimelist.net/${type}/${res.idMal}` : undefined;
 

@@ -1,4 +1,4 @@
-import { zerochan } from '@kaede/apis';
+import { lookup } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command, try_prom } from '@kaede/utils';
 import type { Kaede } from '../../../bot';
 import { partial_scroll } from './util';
@@ -25,7 +25,7 @@ export default new Command<Kaede>({
 	.addHandler('autocomplete', async (bot, int) => {
 		const tag = int.options.getString('tag', true);
 		if (!tag.length) return int.respond([]);
-		const suggestions = await try_prom(zerochan.suggestions(tag));
+		const suggestions = await try_prom(lookup.zerochan.suggestions(tag));
 		console.log(suggestions);
 		if (!suggestions) return int.respond([]);
 		return int.respond(
@@ -41,5 +41,5 @@ export default new Command<Kaede>({
 		const tag = int.options.getString('tag', true);
 		const strict = int.options.getBoolean('strict', false) ?? false;
 
-		await partial_scroll(bot, () => bot.apis.zerochan.tag_info(tag, strict), int);
+		await partial_scroll(bot, () => lookup.zerochan.tag_info(tag, strict), int);
 	});

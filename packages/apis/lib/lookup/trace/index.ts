@@ -1,6 +1,6 @@
 import { AttachmentBuilder, dbs_root, fileType, get_buf, get_json, join, md5 } from '@kaede/utils';
 import { BunDB } from 'bun.db';
-import { anilist } from '..';
+import { anilist } from '../..';
 import type { TraceItem, TraceRes } from './types';
 
 export * from './types';

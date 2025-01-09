@@ -1,4 +1,4 @@
-import { zerochan } from '@kaede/apis';
+import { lookup } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command } from '@kaede/utils';
 import type { Kaede } from '../../../bot';
 import { partial_scroll } from './util';
@@ -89,12 +89,12 @@ export default new Command<Kaede>({
 
 	const page = int.options.getInteger('page') ?? 1;
 	const limit = int.options.getInteger('limit') ?? 10;
-	const sorting = (int.options.getString('sorting') ?? 'id') as zerochan.ZeroSearchQuery['s'];
-	const time_for_popular = (int.options.getInteger('time_for_popular') ?? 0) as zerochan.ZeroSearchQuery['t'];
-	const dimensions = int.options.getString('dimensions') as zerochan.ZeroSearchQuery['d'] | undefined;
-	const color = int.options.getString('color') as zerochan.ZeroSearchQuery['c'] | undefined;
+	const sorting = (int.options.getString('sorting') ?? 'id') as lookup.zerochan.ZeroSearchQuery['s'];
+	const time_for_popular = (int.options.getInteger('time_for_popular') ?? 0) as lookup.zerochan.ZeroSearchQuery['t'];
+	const dimensions = int.options.getString('dimensions') as lookup.zerochan.ZeroSearchQuery['d'] | undefined;
+	const color = int.options.getString('color') as lookup.zerochan.ZeroSearchQuery['c'] | undefined;
 
-	const query: zerochan.ZeroSearchQuery = {
+	const query: lookup.zerochan.ZeroSearchQuery = {
 		p: page,
 		l: limit,
 		s: sorting,
@@ -103,5 +103,5 @@ export default new Command<Kaede>({
 		...(color ? { c: color } : {}),
 	};
 
-	await partial_scroll(bot, () => zerochan.search(query), int);
+	await partial_scroll(bot, () => lookup.zerochan.search(query), int);
 });

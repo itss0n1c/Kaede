@@ -1,24 +1,24 @@
-import type { zerochan } from '@kaede/apis';
+import type { lookup } from '@kaede/apis';
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    create_scrollable,
-    EmbedBuilder,
-    filesize,
-    inline_code,
-    is_url,
-    type Message,
-    type RepliableInteraction,
-    type ScrollableContent,
-    stream_to_attachment,
-    try_prom,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	create_scrollable,
+	EmbedBuilder,
+	filesize,
+	inline_code,
+	is_url,
+	type Message,
+	type RepliableInteraction,
+	type ScrollableContent,
+	stream_to_attachment,
+	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../../bot';
 
 export async function partial_scroll(
 	bot: Kaede,
-	res: () => Promise<zerochan.ZeroPartialEntry[]>,
+	res: () => Promise<lookup.zerochan.ZeroPartialEntry[]>,
 	int: RepliableInteraction,
 ) {
 	return create_scrollable({
@@ -35,9 +35,9 @@ const large_img_link = (id: number, name: string) =>
 
 function partial_entry_to_embed(bot: Kaede) {
 	return async (
-		entry: zerochan.ZeroPartialEntry,
+		entry: lookup.zerochan.ZeroPartialEntry,
 		i: number,
-		arr: Array<zerochan.ZeroPartialEntry>,
+		arr: Array<lookup.zerochan.ZeroPartialEntry>,
 	): Promise<ScrollableContent> => {
 		const file = await try_prom(stream_to_attachment(large_img_link(entry.id, entry.tag), 'thumbnail.png'));
 		if (!file) return bot.error_msg("I wasn't able to get the image...");
@@ -80,7 +80,11 @@ function partial_entry_to_embed(bot: Kaede) {
 	};
 }
 
-export async function send_entry(bot: Kaede, int: RepliableInteraction, entry: zerochan.ZeroEntry): Promise<Message> {
+export async function send_entry(
+	bot: Kaede,
+	int: RepliableInteraction,
+	entry: lookup.zerochan.ZeroEntry,
+): Promise<Message> {
 	const size = filesize(entry.size);
 	const img = large_img_link(entry.id, entry.primary);
 	if (!img) return int.editReply(bot.error_msg('Thats weird, theres no images available for this post...'));

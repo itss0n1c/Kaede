@@ -1,4 +1,4 @@
-import type { AniListMedia } from '../anilist';
+import type { AniListMedia } from '../../anilist';
 
 export interface TraceItem {
 	id: string;
