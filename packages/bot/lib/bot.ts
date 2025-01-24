@@ -9,6 +9,7 @@ import {
 	get_env,
 	wait,
 } from '@kaede/utils';
+import { schedule } from 'node-cron';
 import cmds from './cmds/index.js';
 import emotes from './emotes.js';
 import { init_server } from './server/index.js';
@@ -52,8 +53,7 @@ export class Kaede extends Meinu {
 			await wait(1000);
 		}
 		inst.setActivity();
-		inst.on('guildCreate', () => inst.setActivity());
-		inst.on('guildDelete', () => inst.setActivity());
+		schedule('*/10 * * * *', () => inst.setActivity());
 
 		return inst;
 	}
