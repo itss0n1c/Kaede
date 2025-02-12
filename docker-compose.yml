@@ -1,0 +1,10 @@
+services:
+  bot:
+    container_name: kaede
+    build: .
+    ports:
+      - "3005:3005"
+    env_file:
+      - .env
+    volumes:
+      - ./dbs:/kaede/dbs

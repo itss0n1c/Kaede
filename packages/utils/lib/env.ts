@@ -12,10 +12,9 @@ config({
 });
 
 type BotEnv = 'DISCORD_TOKEN' | 'DISCORD_CLIENT_ID' | 'DISCORD_CLIENT_SECRET';
-type APIEnv = 'API_HOST' | 'API_PORT';
 type WHEnv = 'WH_API_KEY';
 type SNEnv = 'SAUCENAO_API_KEY';
-type KaedeEnv = BotEnv | APIEnv | WHEnv | SNEnv;
+type KaedeEnv = BotEnv | WHEnv | SNEnv;
 
 export function get_env<T extends 'string' | 'number' = 'string', V = T extends 'string' ? string : number>(
 	env: KaedeEnv,
