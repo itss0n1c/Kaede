@@ -9,13 +9,13 @@
 		"dev": "nodemon -w lib/ -e ts --exec bun test"
 	},
 	"devDependencies": {
-		"@types/bun": "1.1.14"
+		"@types/bun": "1.2.16"
 	},
 	"dependencies": {
 		"@kaede/utils": "workspace:*",
 		"anilist": "0.12.4",
 		"sagiri": "4.3.0",
-		"bun.db": "1.0.1",
+		"bun.db": "1.1.2",
 		"exit": "0.1.2"
 	}
 }
