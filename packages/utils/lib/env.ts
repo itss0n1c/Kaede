@@ -9,6 +9,7 @@ await mkdir(dbs_root, { recursive: true });
 
 config({
 	path: join(proj_root, '.env'),
+	quiet: true,
 });
 
 type BotEnv = 'DISCORD_TOKEN' | 'DISCORD_CLIENT_ID' | 'DISCORD_CLIENT_SECRET';

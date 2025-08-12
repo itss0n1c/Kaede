@@ -1,9 +1,11 @@
+name: kaede
 services:
   bot:
     container_name: kaede
+    restart: unless-stopped
     build: .
     ports:
-      - "3005:3005"
+      - ${API_PORT}:3000
     env_file:
       - .env
     volumes:

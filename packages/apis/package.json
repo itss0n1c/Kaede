@@ -1,15 +1,10 @@
 {
 	"name": "@kaede/apis",
-	"type": "module",
+	"private": true,
 	"main": "./lib/index.ts",
-	"exports": {
-		".": "./lib/index.ts"
-	},
+	"type": "module",
 	"scripts": {
-		"dev": "nodemon -w lib/ -e ts --exec bun test"
-	},
-	"devDependencies": {
-		"@types/bun": "1.2.16"
+		"dev": "bun test --watch"
 	},
 	"dependencies": {
 		"@kaede/utils": "workspace:*",

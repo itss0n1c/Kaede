@@ -45,6 +45,6 @@ export default new Command<Kaede>({
 	}
 
 	return int.editReply({
-		content: `Output for ${inlineCode(script)}:\n${codeBlock('js', (is_error ? Bun.inspect : inspect)(run, { depth: is_error ? 0 : 1 }))}`,
+		content: `Output for ${inlineCode(script)}:\n${codeBlock('js', Bun.inspect(run, { depth: is_error ? 0 : 1 }))}`,
 	});
 });
