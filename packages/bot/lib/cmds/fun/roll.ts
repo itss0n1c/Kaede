@@ -5,8 +5,4 @@ import type { Kaede } from '../../bot.js';
 export default new Command<Kaede>({
 	name: 'roll',
 	description: 'roll a dice',
-}).addHandler('chat_input', (bot, int) => {
-	return int.reply({
-		content: `## 🎲 You rolled a ${inlineCode(fun.roll().toLocaleString())}`,
-	});
-});
+}).addHandler('chat_input', (_bot, int) => int.reply(`## 🎲 You rolled a ${inlineCode(fun.roll().toLocaleString())}`));

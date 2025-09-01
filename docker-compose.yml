@@ -3,10 +3,12 @@ services:
   bot:
     container_name: kaede
     restart: unless-stopped
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - ${API_PORT}:3000
     env_file:
       - .env
     volumes:
-      - ./dbs:/kaede/dbs
+      - ./dbs:/app/dbs

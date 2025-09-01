@@ -1,8 +1,8 @@
-FROM oven/bun:1.2.20
+FROM oven/bun:1.2.21
 
 RUN apt-get update && apt-get install -y curl
 
-WORKDIR /kaede
+WORKDIR /app
 
 COPY . .
 

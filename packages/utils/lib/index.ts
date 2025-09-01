@@ -48,7 +48,8 @@ export async function fetch(url: string, _option: ReqInit = {}): Promise<Respons
 	}
 	clearTimeout(timeout);
 
-	if (_option.require_body) if (!res.ok || !res.body) throw new Error(`Invalid response from ${url}`);
+	if (_option.require_body)
+		if (!res.ok || !res.body) throw new Error(`Response missing body from ${res.url}. status: ${res.status}`);
 
 	return res;
 }
@@ -210,7 +211,8 @@ export function relative_time(_date: number | Date | string) {
 }
 
 export const emoji_mention = (emoji: Emoji) => `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
-export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+export const capitalize = <T extends string>(str: T) => (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
+export const uppercase = <T extends string>(str: T) => str.toUpperCase() as Uppercase<T>;
 export const pluralize = (str: string, count: number) => (count === 1 ? str : `${str}s`);
 export const truncate = (str: string, len: number) => str.slice(0, len).trim() + (str.length > len ? '...' : '');
 

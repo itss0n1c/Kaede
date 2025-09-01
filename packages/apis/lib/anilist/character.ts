@@ -1,52 +1,45 @@
-import { anilist } from 'anilist';
-import { staff_query } from './media';
+import type { CharacterGenqlSelection } from 'aniql';
+import { query } from './base';
+import { media_selection } from './media';
+import { _clean_top } from './misc';
 
-export async function characters_search(term: string) {
-	const character_query = anilist.query.character().withId().withName('userPreferred').arguments({ search: term });
+const character_selection = {
+	id: true,
+	age: true,
+	name: { userPreferred: true },
+	image: { large: true },
+	description: { __args: { asHtml: true } },
+	gender: true,
+	siteUrl: true,
+	bloodType: true,
+	media: {
+		pageInfo: { total: true },
+		nodes: media_selection,
+	},
+} satisfies CharacterGenqlSelection;
 
-	const res = await anilist.query
-		.page({
-			page: 1,
-			perPage: 25,
-		})
-		.withCharacters(character_query)
-		.fetch();
-	return res.characters;
-}
+export const character_search = (term: string) =>
+	query({
+		Page: {
+			__args: { page: 1, perPage: 25 },
+			characters: { __args: { search: term }, id: true, name: { userPreferred: true } },
+		},
+	}).then((r) => _clean_top(r.Page?.characters ?? []));
 
-export async function characters_get(character_id: number) {
-	const query = anilist.query
-		.character()
-		.withId()
-		.withAge()
-		.withName('userPreferred')
-		.withImage('large')
-		.withDescription(true)
-		.withGender()
-		.withSiteUrl()
-		.withBloodType()
-		.arguments({
-			id: character_id,
-		})
-		.withMedia({
-			pageInfo: (p) => p.withTotal(),
-			nodes: (n) =>
-				n
-					.withId()
-					.withTitles('userPreferred')
-					.withType()
-					.withFormat()
-					.withStatus()
-					.withSiteUrl()
-					.withStaff({
-						pageInfo: (p) => p.withTotal(),
-						edges: (e) =>
-							e
-								.withId()
-								.withRole()
-								.withNode((n) => staff_query(n)),
-						nodes: (n) => staff_query(n),
-					}),
-		});
-	return query.fetch();
-}
+export const character_get = (id: number) =>
+	query({
+		Character: {
+			__args: { id },
+			...character_selection,
+		},
+	}).then((r) => r.Character);
+
+export const character_trending = () =>
+	query({
+		Page: {
+			__args: { page: 1, perPage: 25 },
+			characters: { __args: { sort: ['FAVOURITES_DESC'] }, ...character_selection },
+		},
+	}).then((r) => _clean_top(r.Page?.characters ?? []));
+
+export type AnilistCharacter = NonNullable<Awaited<ReturnType<typeof character_get>>>;

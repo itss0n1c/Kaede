@@ -45,9 +45,10 @@ export default new Command<Kaede>({
 		.setDescription(
 			[
 				`### ${bot.name}`,
-				`I've been added to **${servers_count.toLocaleString()} ${pluralize('server', servers_count)}**,\nwith a total of **${members_count.toLocaleString()} ${pluralize('member', members_count)}**.`,
+				`I've been added to **${servers_count.toLocaleString()} ${pluralize('server', servers_count)}**,`,
+				`with a total of **${members_count.toLocaleString()} ${pluralize('member', members_count)}**.`,
 				`About **${users_count?.toLocaleString() ?? 'N/A'} ${pluralize('user', users_count ?? 0)}** have me installed directly.`,
-				`**${cmds_count.toLocaleString()} ${pluralize('command', cmds_count)}** available.`,
+				`I have **${cmds_count.toLocaleString()} ${pluralize('command', cmds_count)}** available.`,
 
 				'### Server Info',
 				`**Shard**: ${inlineCode(shard_id ? `#${shard_id}` : 'N/A')}`,
@@ -57,8 +58,8 @@ export default new Command<Kaede>({
 				'',
 				'Made with ❤️ by [war](https://warsame.me)',
 				'',
-				`-# Made with [Echo v${bot.echoVersion}](https://warsame.me/echo)`,
-				`-# Running on [Bun v${bun_version}](https://bun.sh).`,
+				`-# Made with [Echo v${bot.echoVersion}](https://npmjs.com/package/warsam-e/echo)`,
+				`-# Running on [Bun v${bun_version}](https://bun.com).`,
 			].join('\n'),
 		)
 		.setColor(bot.color);

@@ -29,8 +29,9 @@ export default new Command<Kaede>({
 })
 	.addHandler('autocomplete', async (bot, int) => {
 		const term = int.options.getString('character_id', true);
-		if (!term) return int.respond([]);
-		const res = await try_prom(bot.apis.anilist.characters_search(term));
+		const res = term.length
+			? await try_prom(bot.apis.anilist.character_search(term))
+			: await try_prom(bot.apis.anilist.character_trending());
 		if (!res?.length) return int.respond([]);
 		return int.respond(
 			res.map((c) => ({
@@ -49,7 +50,7 @@ export default new Command<Kaede>({
 					'Invalid ID. Make sure to use the autocomplete feature, or type the correct AniList ID manually.',
 			});
 
-		const res = await try_prom(bot.apis.anilist.characters_get(id));
+		const res = await try_prom(bot.apis.anilist.character_get(id));
 		if (!res) return int.editReply({ content: 'Not found' });
 
 		const name = res.name?.userPreferred;
@@ -58,8 +59,8 @@ export default new Command<Kaede>({
 		const age = res.age;
 		const gender = res.gender;
 		const blood_type = res.bloodType;
-		const medias = res.media.nodes;
-		const nodes = medias.flatMap((m) => anilist.get_author(m.staff));
+		const medias = anilist._clean_top(res.media?.nodes ?? []);
+		const nodes = medias.flatMap((m) => anilist.author_get(m.staff));
 		const author = nodes.find((n) => n !== undefined);
 
 		const embed = new EmbedBuilder();

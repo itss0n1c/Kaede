@@ -6,12 +6,11 @@ import images from './images/index.js';
 
 import info from './info.js';
 import lookup from './lookup/index.js';
-import owner from './owner/index.js';
 import react from './react/index.js';
 
 const { ping } = get_default_cmds<Kaede>();
 
-const cmds = [owner, ping, info, fun, ...anilist, ...lookup, react, images];
+const cmds = [ping, info, fun, ...anilist, ...lookup, react, images];
 
 export default cmds.map((c) => {
 	c.contexts = [InteractionContextType.BotDM, InteractionContextType.PrivateChannel, InteractionContextType.Guild];

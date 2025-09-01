@@ -12,15 +12,18 @@ import {
 	get_buf,
 	truncate,
 	try_prom,
+	uppercase,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot';
 
 const media_types = ['anime', 'manga'] as const;
 type MType = (typeof media_types)[number];
 
-const handle_autocomplete = (type: MType) => async (bot: Kaede, int: AutocompleteInteraction) => {
+const handle_autocomplete = (type: MType) => async (_bot: Kaede, int: AutocompleteInteraction) => {
 	const term = int.options.getString(`${type}_id`, true);
-	const res = await try_prom(anilist.search(term, type === 'anime' ? 'ANIME' : 'MANGA'));
+	const res = term.length
+		? await try_prom(anilist.media_search(term, type === 'anime' ? 'ANIME' : 'MANGA'))
+		: await try_prom(anilist.media_trending(uppercase(type)));
 	if (!res?.length) return int.respond([]);
 	return int.respond(
 		res.map((m) => ({
@@ -36,14 +39,14 @@ const handle_autocomplete = (type: MType) => async (bot: Kaede, int: Autocomplet
 const handle_chat = (type: MType) => async (bot: Kaede, int: ChatInputCommandInteraction) => {
 	await int.reply(bot.thinking);
 	const _id = int.options.getString(`${type}_id`, true);
-	const id = Number.parseInt(_id);
+	const id = Number.parseInt(_id, 10);
 	if (Number.isNaN(id))
 		return int.editReply({
 			content: 'Invalid ID. Make sure to use the autocomplete feature, or type the correct AniList ID manually.',
 		});
-	const res = await try_prom(anilist.get(id, type === 'anime' ? 'ANIME' : 'MANGA'));
+	const res = await try_prom(anilist.media_get(id, type === 'anime' ? 'ANIME' : 'MANGA'));
 	if (!res) return int.editReply({ content: 'Not found' });
-	const author = anilist.get_author(res.staff);
+	const author = anilist.author_get(res.staff);
 	const format = anilist.humanize_format(res.format);
 	const title = res.title?.userPreferred ?? res.title?.english ?? res.title?.romaji ?? res.title?.native;
 	const cover = res.coverImage?.extraLarge;

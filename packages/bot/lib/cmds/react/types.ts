@@ -10,7 +10,7 @@ import type {
 
 export type Mentionable = GuildMember | APIInteractionDataResolvedGuildMember | Role | APIRole | User;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: it has to be any
 export type AnyCuteResponseData = CuteResponseData<any, any>;
 
 export type CuteResponseCB = (v: AnyCuteResponseData) => string;
@@ -37,7 +37,7 @@ export interface Category<
 	cb: CuteResponseCB;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: it has to be any
 export type AnyCategory = Category<any, any>;
 
 export interface CuteResponseData<

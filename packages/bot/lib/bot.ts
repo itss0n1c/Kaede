@@ -7,13 +7,14 @@ import {
 	Partials,
 	Routes,
 	get_env,
-	wait,
+	wait
 } from '@kaede/utils';
 import { schedule } from 'node-cron';
 import cmds from './cmds/index.js';
 import emotes from './emotes.js';
 import { init_server } from './server/index.js';
 
+/** imitate discord mobile status */
 (DefaultWebSocketManagerOptions.identifyProperties as Record<string, unknown>).browser = 'Discord iOS';
 
 export class Kaede extends Echo {

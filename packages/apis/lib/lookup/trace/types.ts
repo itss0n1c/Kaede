@@ -1,9 +1,9 @@
-import type { AniListMedia } from '../../anilist';
+import type { AnilistMedia } from '../../anilist';
 
 export interface TraceItem {
 	id: string;
 	anilist: number;
-	media: AniListMedia;
+	media: AnilistMedia;
 	filename: string;
 	episode: number;
 	from: number;

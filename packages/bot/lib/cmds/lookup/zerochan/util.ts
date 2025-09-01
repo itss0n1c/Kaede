@@ -34,11 +34,7 @@ const large_img_link = (id: number, name: string) =>
 	`https://s1.zerochan.net/${encodeURIComponent(name)}.600.${id}.jpg`;
 
 function partial_entry_to_embed(bot: Kaede) {
-	return async (
-		entry: lookup.zerochan.ZeroPartialEntry,
-		i: number,
-		arr: Array<lookup.zerochan.ZeroPartialEntry>,
-	): Promise<ScrollableContent> => {
+	return async (entry: lookup.zerochan.ZeroPartialEntry): Promise<ScrollableContent> => {
 		const file = await try_prom(stream_to_attachment(large_img_link(entry.id, entry.tag), 'thumbnail.png'));
 		if (!file) return bot.error_msg("I wasn't able to get the image...");
 

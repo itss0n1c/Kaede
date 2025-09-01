@@ -52,7 +52,7 @@ export async function lookup(url: string): Promise<TraceRes> {
 		id: md5(`${d.filename}-${d.from}-${d.to}`),
 	}));
 
-	const medias = await anilist.bulk_get(
+	const medias = await anilist.media_bulk(
 		raw.map((r) => r.anilist),
 		'ANIME',
 	);
@@ -61,7 +61,11 @@ export async function lookup(url: string): Promise<TraceRes> {
 	for (const r of raw) {
 		const media = medias.find((m) => m.id === r.anilist);
 		console.log(media);
-		if (!media || media.isAdult || media.tags.some((t) => t.isAdult || (t.name === 'Nudity' && (t.rank ?? 0) > 40)))
+		if (
+			!media ||
+			media.isAdult ||
+			media.tags?.some((t) => t?.isAdult || (t?.name === 'Nudity' && (t?.rank ?? 0) > 40))
+		)
 			continue;
 		items.push({
 			...r,
