@@ -16,4 +16,5 @@ const routes = new Elysia()
 		set.headers['Content-Type'] = 'image/png';
 		return buf;
 	})
+	.get('/add', ({ redirect }) => redirect(bot.install_link))
 	.get('/health', { status: 'ok' });
