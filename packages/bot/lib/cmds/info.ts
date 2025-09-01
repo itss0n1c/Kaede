@@ -55,9 +55,9 @@ export default new Command<Kaede>({
 				`**Memory:** ${inlineCode(memory_usage)}`,
 				`**CPU:** ${inlineCode(cpu_usage)}`,
 				'',
-				'Made with ❤️ by [S0n1c](https://s0n1c.ca)',
+				'Made with ❤️ by [war](https://warsame.me)',
 				'',
-				`-# Made with [Meinu v${bot.meinuVersion}](https://s0n1c.ca/meinu)`,
+				`-# Made with [Echo v${bot.echoVersion}](https://warsame.me/echo)`,
 				`-# Running on [Bun v${bun_version}](https://bun.sh).`,
 			].join('\n'),
 		)

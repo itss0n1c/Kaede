@@ -14,7 +14,7 @@
 		"build": "bun run site:build"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.1.4",
-		"@types/bun": "1.2.20"
+		"@biomejs/biome": "2.2.0",
+		"@types/bun": "1.2.21"
 	}
 }

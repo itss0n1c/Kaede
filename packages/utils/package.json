@@ -11,11 +11,11 @@
 		"dotenv": "17.2.1",
 		"file-type": "21.0.0",
 		"filesize": "11.0.2",
-		"marked": "16.1.2",
-		"meinu": "7.2.3",
+		"marked": "16.2.1",
+		"@warsam-e/echo": "7.2.3",
 		"node-vibrant": "4.0.3",
 		"sharp": "0.34.3",
-		"turndown": "7.2.0",
-		"user-agents": "1.1.629"
+		"turndown": "7.2.1",
+		"user-agents": "1.1.649"
 	}
 }

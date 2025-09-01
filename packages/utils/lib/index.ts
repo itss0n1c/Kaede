@@ -1,5 +1,3 @@
-import type { StringLike } from 'bun';
-import { parseDate } from 'chrono-node';
 import {
 	AttachmentBuilder,
 	type ColorResolvable,
@@ -9,7 +7,9 @@ import {
 	escapeInlineCode,
 	inlineCode,
 	time,
-} from 'meinu';
+} from '@warsam-e/echo';
+import type { StringLike } from 'bun';
+import { parseDate } from 'chrono-node';
 
 import { Vibrant } from 'node-vibrant/node';
 import { createWriteStream } from 'node:fs';
@@ -151,29 +151,12 @@ export async function try_prom<T>(prom: Promise<T> | T | undefined, log = true):
 
 export const inline_code = (str: string) => inlineCode(escapeInlineCode(str));
 
-export async function is_error<T>(prom: Promise<T>): Promise<boolean> {
-	try {
-		await prom;
-		return false;
-	} catch (e) {
-		return true;
-	}
-}
-
-export function slugify(str: string) {
-	return str
-		.toLowerCase()
-		.replace(/[^\w ]+/g, '')
-		.replace(/ +/g, '-');
-}
-
 export function is_url(str: string) {
 	try {
 		new URL(str);
 		return true;
-	} catch (e) {
-		return false;
-	}
+	} catch {}
+	return false;
 }
 
 export const to_png = (buf: Buffer) => sharp(buf).png().toBuffer();
@@ -237,9 +220,9 @@ export const md5 = (input: string) => new Bun.MD5().update(input).digest('hex');
 
 export const useragent = (filter?: ConstructorParameters<typeof UserAgents>[0]) => new UserAgents(filter).toString();
 export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export * from '@warsam-e/echo';
 export * as fileType from 'file-type';
 export { filesize } from 'filesize';
-export * from 'meinu';
 export { basename, extname, join } from 'node:path';
 export * from './env.js';
 

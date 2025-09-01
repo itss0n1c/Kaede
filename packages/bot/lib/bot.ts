@@ -2,8 +2,8 @@ import * as apis from '@kaede/apis';
 import {
 	ActivityType,
 	DefaultWebSocketManagerOptions,
+	Echo,
 	GatewayIntentBits,
-	Meinu,
 	Partials,
 	Routes,
 	get_env,
@@ -16,7 +16,7 @@ import { init_server } from './server/index.js';
 
 (DefaultWebSocketManagerOptions.identifyProperties as Record<string, unknown>).browser = 'Discord iOS';
 
-export class Kaede extends Meinu {
+export class Kaede extends Echo {
 	apis = apis;
 	emotes = emotes;
 	constructor() {
