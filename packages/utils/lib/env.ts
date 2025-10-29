@@ -1,6 +1,6 @@
-import { config } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import { config } from 'dotenv';
 
 export const IS_PROD = get_env('NODE_ENV') === 'production';
 export const proj_root = join(import.meta.url.replace('file://', ''), '../../../..');

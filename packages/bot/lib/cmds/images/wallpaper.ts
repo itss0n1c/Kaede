@@ -1,16 +1,15 @@
+import { images } from '@kaede/apis';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	ButtonBuilder,
 	ButtonStyle,
-	capitalize,
 	Command,
+	capitalize,
 	create_scrollable,
 	stream_to_attachment,
 	try_prom,
 } from '@kaede/utils';
-
-import { images } from '@kaede/apis';
 import type { Kaede } from '../../bot.js';
 
 export default new Command<Kaede>({

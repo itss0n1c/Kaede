@@ -1,22 +1,22 @@
+import { totalmem } from 'node:os';
 import {
 	ActionRowBuilder,
 	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	bytes_to_size,
 	Command,
 	EmbedBuilder,
-	type ImageExtension,
-	TimestampStyles,
-	bytes_to_size,
 	get_buf,
 	get_image_color,
+	type ImageExtension,
 	inlineCode,
 	pluralize,
+	TimestampStyles,
 	time_str,
 	try_prom,
 } from '@kaede/utils';
 import { cpu } from 'node-os-utils';
-import { totalmem } from 'node:os';
 import type { Kaede } from '../bot.js';
 
 export default new Command<Kaede>({

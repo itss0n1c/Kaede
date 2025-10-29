@@ -1,3 +1,4 @@
+import { lookup } from '@kaede/apis';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
@@ -8,16 +9,14 @@ import {
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	Command,
-	type MessageContextMenuCommandInteraction,
-	type RepliableInteraction,
-	type UserContextMenuCommandInteraction,
 	create_scrollable,
 	extname,
+	type MessageContextMenuCommandInteraction,
+	type RepliableInteraction,
 	stream_to_attachment,
 	try_prom,
+	type UserContextMenuCommandInteraction,
 } from '@kaede/utils';
-
-import { lookup } from '@kaede/apis';
 import type { Kaede } from '../../bot.js';
 import { get_msg_attachment_url, get_pfp_context } from './util.js';
 
