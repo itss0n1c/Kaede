@@ -16,10 +16,10 @@ import {
 	type ScrollableContent,
 	to_png,
 	try_prom,
-	type UserContextMenuCommandInteraction
+	type UserContextMenuCommandInteraction,
 } from '@kaede/utils';
-import type { Kaede } from '../../bot';
-import { get_msg_attachment_url, get_pfp_context } from './util';
+import type { Kaede } from '../../bot.ts';
+import { get_msg_attachment_url, get_pfp_context } from './util.ts';
 
 interface HandleTypes {
 	chat_input: ChatInputCommandInteraction;

@@ -1,14 +1,14 @@
 import { AttachmentBuilder, dbs_root, fileType, get_buf, get_json, join, md5 } from '@kaede/utils';
 import { BunDB } from 'bun.db';
-import { anilist } from '../..';
-import type { TraceItem, TraceRes } from './types';
+import { anilist } from '../../index.ts';
+import type { TraceItem, TraceItemRaw, TraceRes } from './types.ts';
 
-export * from './types';
+export * from './types.ts';
 
 interface APIRes {
 	frameCount: number;
 	error: string;
-	result: TraceItem[];
+	result: TraceItemRaw[];
 }
 
 const db_path = join(dbs_root, 'trace.sqlite');
@@ -35,7 +35,10 @@ export async function lookup(url: string): Promise<TraceRes> {
 
 	console.log({ url, type });
 
-	const data = await get_json<APIRes>('https://api.trace.moe/search', {
+	const api_url = new URL('https://api.trace.moe/search');
+	api_url.searchParams.set('anilistInfo', '2');
+
+	const data = await get_json<APIRes>(api_url.toString(), {
 		method: 'POST',
 		body: stream,
 		headers: {
@@ -53,22 +56,24 @@ export async function lookup(url: string): Promise<TraceRes> {
 	}));
 
 	const medias = await anilist.media_bulk(
-		raw.map((r) => r.anilist),
+		raw.map((r) => r.anilist.id),
 		'ANIME',
 	);
 
 	const items: Array<TraceItem> = [];
 	for (const r of raw) {
-		const media = medias.find((m) => m.id === r.anilist);
-		console.log(media);
+		const media = medias.find((m) => m.id === r.anilist.id);
 		if (
 			!media ||
 			media.isAdult ||
 			media.tags?.some((t) => t?.isAdult || (t?.name === 'Nudity' && (t?.rank ?? 0) > 40))
 		)
 			continue;
+
+		const { anilist, ...rest } = r;
 		items.push({
-			...r,
+			...rest,
+			anilist_id: anilist.id,
 			media,
 		});
 	}

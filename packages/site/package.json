@@ -10,9 +10,9 @@
 	},
 	"devDependencies": {
 		"@kaede/utils": "workspace:*",
-		"sass-embedded": "1.91.0"
+		"sass-embedded": "1.97.3"
 	},
 	"dependencies": {
-		"astro": "5.13.5"
+		"astro": "5.17.1"
 	}
 }

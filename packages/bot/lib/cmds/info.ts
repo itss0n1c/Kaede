@@ -16,8 +16,10 @@ import {
 	time_str,
 	try_prom,
 } from '@kaede/utils';
-import { cpu } from 'node-os-utils';
-import type { Kaede } from '../bot.js';
+import OSUtils from 'node-os-utils';
+import type { Kaede } from '../bot.ts';
+
+const osutils = new OSUtils();
 
 export default new Command<Kaede>({
 	name: 'info',
@@ -31,8 +33,8 @@ export default new Command<Kaede>({
 	console.log(totalmem());
 	const memory_usage = `${bytes_to_size(process.memoryUsage().heapUsed)}`;
 
-	const cpu_usage_percent = await cpu.usage();
-	const cpu_usage = `${cpu_usage_percent.toFixed(2)}%`;
+	const cpu_usage_percent = await osutils.cpu.usage();
+	const cpu_usage = cpu_usage_percent.success ? `${cpu_usage_percent.data.toFixed(2)}%` : 'N/A';
 
 	const shard_id = bot.shardId?.toString();
 	const [servers_count, members_count] = await Promise.all([bot.guildCount(), bot.memberCount()]);
@@ -56,7 +58,7 @@ export default new Command<Kaede>({
 				`**Memory:** ${inlineCode(memory_usage)}`,
 				`**CPU:** ${inlineCode(cpu_usage)}`,
 				'',
-				'Made with ❤️ by [war](https://warsame.me)',
+				'Made with ❤️ by [war](https://warsa.me)',
 				'',
 				`-# Made with [Echo v${bot.echoVersion}](https://npmjs.com/package/warsam-e/echo)`,
 				`-# Running on [Bun v${bun_version}](https://bun.com).`,

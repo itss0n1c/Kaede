@@ -1,7 +1,7 @@
 import { api_request_client, get_text, type ReqClientInit, useragent } from '@kaede/utils';
-import type { ZeroEntry, ZeroEntryList, ZeroSearchQuery } from './types';
+import type { ZeroEntry, ZeroEntryList, ZeroSearchQuery } from './types.ts';
 
-export * from './types';
+export * from './types.ts';
 
 // 60 requests per minute
 const rate_limit = 60;

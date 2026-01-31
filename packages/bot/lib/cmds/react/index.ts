@@ -1,20 +1,20 @@
 import { images } from '@kaede/apis';
 import {
-    ActionRowBuilder,
-    ApplicationCommandOptionType,
-    AttachmentBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    basename,
-    type ChatInputCommandInteraction,
-    Command,
-    get_stream_node,
-    is_url,
-    try_prom,
+	ActionRowBuilder,
+	ApplicationCommandOptionType,
+	AttachmentBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	basename,
+	type ChatInputCommandInteraction,
+	Command,
+	get_stream_node,
+	is_url,
+	try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../bot.js';
-import { multi_user, single_user } from './reactions/index.js';
-import type { AnyCategory, Category, CuteResponseCB, CuteResponseData, Mentionable } from './types.js';
+import type { Kaede } from '../../bot.ts';
+import { multi_user, single_user } from './reactions/index.ts';
+import type { AnyCategory, Category, CuteResponseCB, CuteResponseData, Mentionable } from './types.ts';
 
 export async function cute_response<
 	ImageType extends keyof images.nekos.ImageCategories,

@@ -10,7 +10,7 @@ import {
 	stream_to_attachment,
 	try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../bot.js';
+import type { Kaede } from '../../bot.ts';
 
 export default new Command<Kaede>({
 	name: 'wallpaper',

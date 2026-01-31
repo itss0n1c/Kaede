@@ -1,6 +1,6 @@
 import { Command } from '@kaede/utils';
-import type { Kaede } from '../../../bot';
-import character from './character';
+import type { Kaede } from '../../../bot.ts';
+import character from './character.ts';
 
 export default new Command<Kaede>({
 	name: 'anilist',

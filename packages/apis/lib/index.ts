@@ -1,5 +1,4 @@
-export * as anilist from './anilist';
-export * as fun from './fun';
-export * as images from './images';
-export * as lookup from './lookup';
-
+export * as anilist from './anilist/index.ts';
+export * as fun from './fun/index.ts';
+export * as images from './images/index.ts';
+export * as lookup from './lookup/index.ts';

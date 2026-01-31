@@ -7,12 +7,12 @@ import {
 	get_env,
 	Partials,
 	Routes,
-	wait
+	wait,
 } from '@kaede/utils';
 import { schedule } from 'node-cron';
-import cmds from './cmds/index.js';
-import emotes from './emotes.js';
-import { init_server } from './server/index.js';
+import cmds from './cmds/index.ts';
+import emotes from './emotes.ts';
+import { init_server } from './server/index.ts';
 
 /** imitate discord mobile status */
 (DefaultWebSocketManagerOptions.identifyProperties as Record<string, unknown>).browser = 'Discord iOS';
@@ -49,10 +49,6 @@ export class Kaede extends Echo {
 		init_server();
 
 		await inst.guilds.fetch();
-		while (inst.guilds.cache.some((g) => !g.available)) {
-			console.log('Waiting for guilds to be available...');
-			await wait(1000);
-		}
 		inst.setActivity();
 		schedule('*/10 * * * *', () => inst.setActivity());
 

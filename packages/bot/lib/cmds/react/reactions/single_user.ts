@@ -1,4 +1,4 @@
-import { create_category, mention } from './util';
+import { create_category, mention } from './util.ts';
 
 export const single_user = [
 	// new

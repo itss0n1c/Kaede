@@ -1,12 +1,19 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.13/schema.json",
 	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"files": {
-		"includes": ["**", "!!packages/**/.svelte-kit", "!!packages/**/build", "!!dbs"]
+		"includes": [
+			"**",
+			"!!packages/**/.svelte-kit",
+			"!!packages/**/build",
+			"!!assets",
+			"!!**/*.svelte",
+			"!!**/generated",
+			"!!**/*.js"
+		]
 	},
 	"formatter": {
 		"enabled": true,
-		"includes": ["!node_modules/**"],
 		"lineWidth": 120,
 		"indentWidth": 4,
 		"indentStyle": "tab"
@@ -18,23 +25,19 @@
 	},
 	"linter": {
 		"enabled": true,
-		"includes": ["!node_modules/**"],
 		"rules": {
 			"recommended": true,
+			"suspicious": {
+				"noAssignInExpressions": "off"
+			},
 			"correctness": {
-				"noUnusedImports": "off"
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
+				"useImportExtensions": "error"
 			},
 			"style": {
-				"noParameterAssign": "error",
-				"useAsConstAssertion": "error",
-				"useDefaultParameterLast": "error",
-				"useEnumInitializers": "error",
-				"useSelfClosingElements": "error",
-				"useSingleVarDeclarator": "error",
-				"noUnusedTemplateLiteral": "error",
-				"useNumberNamespace": "error",
-				"noInferrableTypes": "error",
-				"noUselessElse": "error"
+				"noParameterAssign": "off",
+				"useExportType": "error"
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { lookup } from '.';
+import { lookup } from './index.ts';
 
 async function sauce() {
 	const url =

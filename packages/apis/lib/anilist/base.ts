@@ -1,6 +1,12 @@
 import { md5 } from '@kaede/utils';
 import { Stash } from '@warsam-e/stash';
-import { AniQLClient, type AniQLRequestOptions, type FieldsSelection, type Query, type QueryGenqlSelection } from 'aniql';
+import {
+	AniQLClient,
+	type AniQLRequestOptions,
+	type FieldsSelection,
+	type Query,
+	type QueryGenqlSelection,
+} from 'aniql';
 
 const client_id = 29912;
 const client = new AniQLClient({ auth: { response_type: 'token', client_id } });

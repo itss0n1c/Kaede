@@ -1,4 +1,4 @@
-import { get_json, } from '@kaede/utils';
+import { get_json } from '@kaede/utils';
 
 const excluded = [
 	'panties',

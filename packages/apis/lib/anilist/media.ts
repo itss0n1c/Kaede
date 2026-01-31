@@ -1,6 +1,6 @@
 import type { MediaGenqlSelection, MediaTagGenqlSelection, MediaType, StaffGenqlSelection } from 'aniql';
-import { query } from './base';
-import { _clean_top, fuzzy_date } from './misc';
+import { query } from './base.ts';
+import { _clean_top, fuzzy_date } from './misc.ts';
 
 const staff_selection = {
 	id: true,

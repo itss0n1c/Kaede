@@ -12,7 +12,7 @@ import {
 	truncate,
 	try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../../bot';
+import type { Kaede } from '../../../bot.ts';
 
 export default new Command<Kaede>({
 	name: 'character',

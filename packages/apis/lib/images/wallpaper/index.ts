@@ -6,7 +6,7 @@ import type {
 	WallpaperRatio,
 	WallpaperSearch,
 	WallpaperSearchRes,
-} from './types';
+} from './types.ts';
 
 interface APIRes<T> {
 	error?: string;
@@ -58,4 +58,4 @@ export const search_with_info = (options: Partial<WallpaperSearch>) =>
 		.then((r) => r.slice(0, 5).map((i) => get(i.id)))
 		.then((r) => Promise.all(r));
 
-export type * from './types';
+export type * from './types.ts';

@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"noEmit": true,
 		"declaration": false,
 		"forceConsistentCasingInFileNames": true,
 		"lib": ["ESNext", "DOM.AsyncIterable"],
@@ -10,7 +11,9 @@
 		"downlevelIteration": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"strict": true
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"allowImportingTsExtensions": true
 	},
 	"exclude": ["node_modules", "**/node_modules/*"]
 }

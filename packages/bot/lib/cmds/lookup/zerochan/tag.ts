@@ -1,7 +1,7 @@
 import { lookup } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command, try_prom } from '@kaede/utils';
-import type { Kaede } from '../../../bot';
-import { partial_scroll } from './util';
+import type { Kaede } from '../../../bot.ts';
+import { partial_scroll } from './util.ts';
 
 export default new Command<Kaede>({
 	name: 'tag',

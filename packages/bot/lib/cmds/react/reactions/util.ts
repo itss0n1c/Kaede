@@ -1,6 +1,6 @@
 import type { images } from '@kaede/apis';
 import { GuildMember } from '@kaede/utils';
-import type { AnyCuteResponseData, Category, CategoryInit } from '../types';
+import type { AnyCuteResponseData, Category, CategoryInit } from '../types.ts';
 
 export const create_category = <
 	ImageType extends keyof images.nekos.ImageCategories,

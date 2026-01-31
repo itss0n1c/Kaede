@@ -1,6 +1,6 @@
 import { get_buf, get_env, IS_PROD } from '@kaede/utils';
 import { Elysia } from 'elysia';
-import { bot } from '../bot';
+import { bot } from '../bot.ts';
 
 const API_PORT = IS_PROD ? 3000 : get_env('API_PORT', 'number');
 

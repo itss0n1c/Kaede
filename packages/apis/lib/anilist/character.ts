@@ -1,7 +1,7 @@
 import type { CharacterGenqlSelection } from 'aniql';
-import { query } from './base';
-import { media_selection } from './media';
-import { _clean_top } from './misc';
+import { query } from './base.ts';
+import { media_selection } from './media.ts';
+import { _clean_top } from './misc.ts';
 
 const character_selection = {
 	id: true,

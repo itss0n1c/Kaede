@@ -3,22 +3,22 @@ import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
-	type AttachmentBuilder,
+	AttachmentBuilder,
 	type BaseInteraction,
 	ButtonBuilder,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	Command,
 	create_scrollable,
-	extname,
+	fetch,
+	fileType,
 	type MessageContextMenuCommandInteraction,
 	type RepliableInteraction,
-	stream_to_attachment,
 	try_prom,
 	type UserContextMenuCommandInteraction,
 } from '@kaede/utils';
-import type { Kaede } from '../../bot.js';
-import { get_msg_attachment_url, get_pfp_context } from './util.js';
+import type { Kaede } from '../../bot.ts';
+import { get_msg_attachment_url, get_pfp_context } from './util.ts';
 
 interface HandleTypes {
 	chat_input: ChatInputCommandInteraction;
@@ -42,20 +42,19 @@ async function handle_res(bot: Kaede, res: lookup.trace.TraceRes, int: Repliable
 			const files: AttachmentBuilder[] = [];
 
 			const name = val.media.title?.userPreferred ?? val.filename;
-			const site_url = val.media.siteUrl ?? `https://anilist.co/anime/${val.anilist}`;
+			const site_url = val.media.siteUrl ?? `https://anilist.co/anime/${val.anilist_id}`;
 
-			const ext = extname(new URL(val.video).pathname);
+			console.log(val);
 
-			if (ext !== '.mp4') {
-				const img_ext = extname(new URL(val.image).pathname);
-				const img_filename = `${val.id}${img_ext}`;
-				const img_file = await try_prom(stream_to_attachment(val.image, img_filename));
-				if (img_file) files.push(img_file);
+			const res = await try_prom(fetch(val.video));
+			const blob = await try_prom(res?.blob());
+			if (blob) {
+				const blob_type = blob ? await fileType.fileTypeFromBlob(blob) : null;
+				const filename = `${val.id}.${blob_type?.ext ?? 'mp4'}`;
+				const buf = Buffer.from(await blob.arrayBuffer());
+				const file = new AttachmentBuilder(buf, { name: filename });
+				files.push(file);
 			}
-
-			const filename = `${val.id}${ext}`;
-			const file = await try_prom(stream_to_attachment(val.video, filename));
-			if (file) files.push(file);
 
 			const content = [
 				`## ${name}`,

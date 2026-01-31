@@ -96,6 +96,7 @@ export async function get_stream_node(url: string, option: ReqInit = {}): Promis
 
 export async function stream_to_attachment(url: string, name: string) {
 	const res = await get_stream_node(url);
+
 	return new AttachmentBuilder(res, { name });
 }
 
@@ -225,5 +226,4 @@ export { basename, extname, join } from 'node:path';
 export * from '@warsam-e/echo';
 export * as fileType from 'file-type';
 export { filesize } from 'filesize';
-export * from './env.js';
-
+export * from './env.ts';

@@ -1,6 +1,6 @@
 import { fun } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command, EmbedBuilder, inlineCode } from '@kaede/utils';
-import type { Kaede } from '../../bot.js';
+import type { Kaede } from '../../bot.ts';
 
 export default new Command<Kaede>({
 	name: '8ball',

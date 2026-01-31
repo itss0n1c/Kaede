@@ -1,7 +1,7 @@
 import { lookup } from '@kaede/apis';
 import { ApplicationCommandOptionType, Command } from '@kaede/utils';
-import type { Kaede } from '../../../bot';
-import { send_entry } from './util';
+import type { Kaede } from '../../../bot.ts';
+import { send_entry } from './util.ts';
 
 export default new Command<Kaede>({
 	name: 'entry',

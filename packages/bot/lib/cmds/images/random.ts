@@ -1,15 +1,15 @@
 import { images } from '@kaede/apis';
 import {
-    ActionRowBuilder,
-    AttachmentBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    basename,
-    Command,
-    get_stream_node,
-    try_prom,
+	ActionRowBuilder,
+	AttachmentBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	basename,
+	Command,
+	get_stream_node,
+	try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../bot';
+import type { Kaede } from '../../bot.ts';
 
 export default new Command<Kaede>({
 	name: 'random',

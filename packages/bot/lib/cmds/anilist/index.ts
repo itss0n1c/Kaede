@@ -1,4 +1,4 @@
-import media from './media';
-import mod from './mod';
+import media from './media.ts';
+import mod from './mod/index.ts';
 
 export default [...media, mod];

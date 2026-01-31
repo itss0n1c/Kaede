@@ -14,7 +14,7 @@ import {
 	stream_to_attachment,
 	try_prom,
 } from '@kaede/utils';
-import type { Kaede } from '../../../bot';
+import type { Kaede } from '../../../bot.ts';
 
 export async function partial_scroll(
 	bot: Kaede,

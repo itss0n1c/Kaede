@@ -1,5 +1,5 @@
 import { api_request_client, type ReqClientInit } from '@kaede/utils';
-import { GIF_CATEGORY, IMAGE_CATEGORIES, IMAGE_CATEGORY, type ImageCategories, type ImageRes } from './types';
+import { GIF_CATEGORY, IMAGE_CATEGORIES, IMAGE_CATEGORY, type ImageCategories, type ImageRes } from './types.ts';
 
 interface APIRes<T> {
 	results: T[];
@@ -37,4 +37,4 @@ export async function get_categories<ImageType extends keyof ImageCategories>(ty
 	return type === 'gif' ? GIF_CATEGORY : IMAGE_CATEGORY;
 }
 
-export type * from './types';
+export type * from './types.ts';

@@ -1,9 +1,9 @@
 import { truncate, turndown } from '@kaede/utils';
 import type { FuzzyDate, MediaFormat, MediaStatus } from 'aniql';
 
-export * from './character';
-export * from './media';
-export * from './misc';
+export * from './character.ts';
+export * from './media.ts';
+export * from './misc.ts';
 
 export function humanize_status(status: MediaStatus | null) {
 	if (!status) return 'Unknown';
