@@ -22,7 +22,7 @@ export default new Command<Kaede>({
 		},
 	],
 })
-	.addHandler('autocomplete', async (bot, int) => {
+	.addHandler('autocomplete', async (_bot, int) => {
 		const tag = int.options.getString('tag', true);
 		const suggestions = await try_prom(lookup.zerochan.suggestions(tag));
 		console.log(suggestions);

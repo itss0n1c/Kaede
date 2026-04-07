@@ -7,7 +7,6 @@ import {
 	get_env,
 	Partials,
 	Routes,
-	wait,
 } from '@kaede/utils';
 import { schedule } from 'node-cron';
 import cmds from './cmds/index.ts';

@@ -51,7 +51,7 @@
     "packages/utils": {
       "name": "@kaede/utils",
       "dependencies": {
-        "@warsam-e/echo": "7.4.0",
+        "@warsam-e/echo": "7.4.1",
         "chrono-node": "2.9.0",
         "dotenv": "17.4.1",
         "file-type": "22.0.0",
@@ -447,7 +447,7 @@
 
     "@vladfrangu/async_event_emitter": ["@vladfrangu/async_event_emitter@2.4.7", "", {}, "sha512-Xfe6rpCTxSxfbswi/W/Pz7zp1WWSNn4A0eW4mLkQUewCrXXtMj31lCg+iQyTkh/CkusZSq9eDflu7tjEDXUY6g=="],
 
-    "@warsam-e/echo": ["@warsam-e/echo@7.4.0", "", { "dependencies": { "chalk": "5.6.2", "discord.js": "14.26.2", "dotenv": "17.4.1" } }, "sha512-7XNFKTAw13LAB7eEKX+ReRmKbxdLtmXo8Ysb3ppUY+OV7NqJOR7sXvRPmRufSB4C69YN6Q9K+wH3W/4ww0fJ5A=="],
+    "@warsam-e/echo": ["@warsam-e/echo@7.4.1", "", { "dependencies": { "chalk": "5.6.2", "discord.js": "14.26.2", "dotenv": "17.4.1" } }, "sha512-NDG6xtP2fa2qk85Cd0IOmz0vr1nwH569mxAZZcaRRIu44wA//e5FWCLGZs8qUMhOmJB4rnJ571Amb0KBzNFHYw=="],
 
     "@warsam-e/stash": ["@warsam-e/stash@1.2.0", "", { "dependencies": { "bun.db": "1.1.4", "chrono-node": "2.9.0", "redis": "5.9.0" } }, "sha512-zn+psaG/1a1OXidqMpLoETa92DSLCmJYOCGqr8G5xjOhjeBXgEz5Z/DLvfW4IxVbAQq14VL3TN1M01xIey33PQ=="],
 

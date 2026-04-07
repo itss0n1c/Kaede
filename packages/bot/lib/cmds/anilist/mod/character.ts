@@ -43,7 +43,7 @@ export default new Command<Kaede>({
 	.addHandler('chat_input', async (bot, int) => {
 		await int.reply(bot.thinking);
 		const _id = int.options.getString('character_id', true);
-		const id = Number.parseInt(_id);
+		const id = Number.parseInt(_id, 10);
 		if (Number.isNaN(id))
 			return int.editReply({
 				content:

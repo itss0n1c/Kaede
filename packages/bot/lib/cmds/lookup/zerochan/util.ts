@@ -3,6 +3,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ContainerBuilder,
 	create_scrollable,
 	EmbedBuilder,
 	filesize,
@@ -11,7 +12,9 @@ import {
 	type Message,
 	type RepliableInteraction,
 	type ScrollableContent,
+	SeparatorSpacingSize,
 	stream_to_attachment,
+	TextDisplayBuilder,
 	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../../bot.ts';
@@ -38,41 +41,34 @@ function partial_entry_to_embed(bot: Kaede) {
 		const file = await try_prom(stream_to_attachment(large_img_link(entry.id, entry.tag), 'thumbnail.png'));
 		if (!file) return bot.error_msg("I wasn't able to get the image...");
 
-		const embed = new EmbedBuilder()
-			.setTitle(entry.tag)
-
-			.setFields([
-				{
-					name: 'Dimensions',
-					value: `${entry.width} x ${entry.height}`,
-				},
-				{
-					name: 'Tags',
-					value: `-# ${entry.tags.map((t) => inline_code(t)).join(', ')}`,
-				},
+		const container = new ContainerBuilder()
+			.addTextDisplayComponents([
+				new TextDisplayBuilder().setContent(`## ${entry.tag}`),
+				new TextDisplayBuilder().setContent(`Dimensions: ${entry.width} x ${entry.height}`),
+				new TextDisplayBuilder().setContent(`Tags: ${entry.tags.map((t) => inline_code(t)).join(', ')}`),
 			])
-			.setImage('attachment://thumbnail.png')
-			.setFooter({
-				text: `Entry ID: ${entry.id}`,
-			});
+			.addMediaGalleryComponents((m) => m.addItems((i) => i.setURL('attachment://thumbnail.png')))
+			.addSeparatorComponents((i) => i.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+			.addTextDisplayComponents(new TextDisplayBuilder().setContent(`Entry ID: ${entry.id}`))
+			.addActionRowComponents((a) =>
+				a.setComponents([
+					...(is_url(entry.source)
+						? [new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Source').setURL(entry.source)]
+						: [
+								new ButtonBuilder()
+									.setStyle(ButtonStyle.Secondary)
+									.setLabel('Unknown Source')
+									.setDisabled(true)
+									.setCustomId('unknown_source'),
+							]),
+					new ButtonBuilder()
+						.setStyle(ButtonStyle.Link)
+						.setLabel('View on Zerochan')
+						.setURL(`https://www.zerochan.net/${entry.id}`),
+				]),
+			);
 
-		const row = new ActionRowBuilder<ButtonBuilder>().setComponents([
-			...(is_url(entry.source)
-				? [new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Source').setURL(entry.source)]
-				: [
-						new ButtonBuilder()
-							.setStyle(ButtonStyle.Secondary)
-							.setLabel('Unknown Source')
-							.setDisabled(true)
-							.setCustomId('unknown_source'),
-					]),
-			new ButtonBuilder()
-				.setStyle(ButtonStyle.Link)
-				.setLabel('View on Zerochan')
-				.setURL(`https://www.zerochan.net/${entry.id}`),
-		]);
-
-		return { content: '', embed, files: [file], components: [row] };
+		return { files: [file], components: [container] };
 	};
 }
 

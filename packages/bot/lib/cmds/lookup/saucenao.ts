@@ -10,6 +10,7 @@ import {
 	Command,
 	create_scrollable,
 	get_buf,
+	MediaGalleryBuilder,
 	type MessageContextMenuCommandInteraction,
 	md5,
 	type RepliableInteraction,
@@ -37,14 +38,13 @@ function author_button(sauce: lookup.saucenao.SauceResItem) {
 
 async function match_sauce(sauce: lookup.saucenao.SauceResItem): Promise<ScrollableContent> {
 	console.log(sauce);
-	const url = new URL(sauce.thumbnail);
 
-	const fileame = `${md5(sauce.url)}.png`;
+	const filename = `${md5(sauce.url)}.png`;
 	const files: AttachmentBuilder[] = [];
 	const buf = await try_prom(get_buf(sauce.thumbnail));
 	if (buf) {
 		const png = await try_prom(to_png(buf));
-		if (png) files.push(new AttachmentBuilder(png, { name: fileame }));
+		if (png) files.push(new AttachmentBuilder(png, { name: filename }));
 	}
 
 	const row = new ActionRowBuilder<ButtonBuilder>().setComponents([
@@ -58,18 +58,16 @@ async function match_sauce(sauce: lookup.saucenao.SauceResItem): Promise<Scrolla
 	]);
 
 	return {
-		content: !files.length ? '-# Failed to load image from source...' : '',
 		files,
-		embed: undefined,
-		components: [row],
+		components: [new MediaGalleryBuilder().addItems((i) => i.setURL(`attachment://${filename}`)), row],
 	};
 }
 
-const handle_sauce = (url: string, bot: Kaede, int: RepliableInteraction) =>
+const handle_sauce = (url: string, _bot: Kaede, int: RepliableInteraction) =>
 	create_scrollable({
 		int,
 		data: () => lookup.saucenao.lookup(url),
-		fail_msg: { content: 'Failed to find the source of the image.' },
+		// fail_msg: { content: 'Failed to find the source of the image.' },
 		show_page_count: true,
 		match: match_sauce,
 	});
