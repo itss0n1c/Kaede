@@ -13,8 +13,8 @@
 		"@types/node-cron": "3.0.11"
 	},
 	"dependencies": {
-		"elysia": "1.4.22",
-		"node-os-utils": "2.0.1",
+		"elysia": "1.4.28",
+		"node-os-utils": "2.0.3",
 		"node-cron": "4.2.1"
 	}
 }
