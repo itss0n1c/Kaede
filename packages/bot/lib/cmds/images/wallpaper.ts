@@ -1,13 +1,18 @@
 import { images } from '@kaede/apis';
 import {
-	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	ButtonBuilder,
 	ButtonStyle,
+	bytes_to_size,
 	Command,
+	ContainerBuilder,
 	capitalize,
 	create_scrollable,
+	inlineCode,
+	SeparatorSpacingSize,
 	stream_to_attachment,
+	TimestampStyles,
+	time_str,
 	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot.ts';
@@ -127,24 +132,45 @@ export default new Command<Kaede>({
 			const file = await try_prom(stream_to_attachment(val.path, 'wallpaper.png'));
 			if (!file) return bot.error_msg(`i wasn't able to send the photo in this card ${bot.emotes('sad')}`);
 
-			const row = new ActionRowBuilder<ButtonBuilder>().setComponents([
-				new ButtonBuilder()
-					.setStyle(ButtonStyle.Link)
-					.setLabel(`By ${val.uploader.username}`)
-					.setURL(val.short_url),
-				val.source
-					? new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('View Original').setURL(val.source)
-					: new ButtonBuilder()
-							.setStyle(ButtonStyle.Secondary)
-							.setCustomId('unknown_source')
-							.setDisabled(true)
-							.setLabel('Unknown Source'),
-			]);
+			console.log(val);
+
+			const container = new ContainerBuilder()
+				.addMediaGalleryComponents((x) => x.addItems((i) => i.setURL(`attachment://${file.name}`)))
+				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+				.addTextDisplayComponents((x) =>
+					x.setContent(
+						[
+							time_str(val.created_at, TimestampStyles.LongDate),
+							`Dimensions: ${inlineCode(val.resolution)}`,
+							`File Size: ${inlineCode(bytes_to_size(val.file_size))}`,
+							'',
+							val.tags.map((x) => inlineCode(x.name)).join(', '),
+						].join('\n'),
+					),
+				)
+				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+				.addActionRowComponents((x) =>
+					x.setComponents([
+						new ButtonBuilder()
+							.setStyle(ButtonStyle.Link)
+							.setLabel(`By ${val.uploader.username}`)
+							.setURL(val.short_url),
+						val.source
+							? new ButtonBuilder()
+									.setStyle(ButtonStyle.Link)
+									.setLabel('View Original')
+									.setURL(val.source)
+							: new ButtonBuilder()
+									.setStyle(ButtonStyle.Secondary)
+									.setCustomId('unknown_source')
+									.setDisabled(true)
+									.setLabel('Unknown Source'),
+					]),
+				);
 
 			return {
-				content: '',
+				components: [container],
 				files: [file],
-				components: [row],
 			};
 		},
 	});

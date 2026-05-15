@@ -1,41 +1,28 @@
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import arkenv from 'arkenv';
 import { config } from 'dotenv';
 
-export const IS_PROD = get_env('NODE_ENV') === 'production';
-export const proj_root = join(import.meta.url.replace('file://', ''), '../../../..');
+export const proj_root = join(import.meta.path, '../../../..');
 export const dbs_root = join(proj_root, 'dbs');
 
 await mkdir(dbs_root, { recursive: true });
 
-if (!IS_PROD) {
+if (Bun.env.NODE_ENV !== 'production') {
 	config({
 		path: join(proj_root, '.env'),
 		quiet: true,
 	});
 }
 
-type BotEnv = 'DISCORD_TOKEN' | 'DISCORD_CLIENT_ID' | 'DISCORD_CLIENT_SECRET';
-type WHEnv = 'WH_API_KEY';
-type SNEnv = 'SAUCENAO_API_KEY';
-type APIEnv = 'API_PORT';
-type Env = 'NODE_ENV' | BotEnv | WHEnv | SNEnv | APIEnv;
+export const env = arkenv({
+	DISCORD_TOKEN: 'string',
+	DISCORD_CLIENT_ID: 'string',
+	DISCORD_CLIENT_SECRET: 'string',
+	WH_API_KEY: 'string',
+	SAUCENAO_API_KEY: 'string',
+	API_PORT: 'number',
+	NODE_ENV: "'development' | 'production' | 'test' = 'development'",
+});
 
-export function get_env<
-	T extends 'string' | 'boolean' | 'number' = 'string',
-	V = T extends 'string' ? string : T extends 'boolean' ? boolean : number,
->(env: Env, type?: T): V {
-	const current_type = type ?? ('string' as T);
-	const val = process.env[env];
-	if (!val) {
-		if (env === 'NODE_ENV') return 'development' as V;
-		throw new Error(`Environment variable ${env} is not set`);
-	}
-	if (current_type === 'string') return val as V;
-	if (current_type === 'boolean') return (val === 'true') as V;
-	const num = Number(val);
-	if (Number.isNaN(num)) {
-		throw new Error(`Environment variable ${env} is not a number`);
-	}
-	return num as V;
-}
+export const IS_PROD = env.NODE_ENV === 'production';

@@ -4,9 +4,13 @@ import {
 	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	basename,
+	bytes_to_size,
 	Command,
+	ContainerBuilder,
 	get_stream_node,
+	inlineCode,
+	MessageFlags,
+	SeparatorSpacingSize,
 	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot.ts';
@@ -21,10 +25,8 @@ export default new Command<Kaede>({
 
 	console.log(res);
 
-	const url = `https://${res.file_url}`;
-
 	const file = await try_prom(
-		get_stream_node(url).then((b) => new AttachmentBuilder(b, { name: basename(res.file_url) })),
+		get_stream_node(res.url).then((b) => new AttachmentBuilder(b, { name: `${res.id}.png` })),
 	);
 	if (!file) return int.editReply({ content: 'Something went wrong while trying to get the image' });
 
@@ -39,9 +41,35 @@ export default new Command<Kaede>({
 		components.push(row);
 	}
 
+	const container = new ContainerBuilder()
+		.addMediaGalleryComponents((x) => x.addItems((i) => i.setURL(`attachment://${file.name}`)))
+		.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+		.addTextDisplayComponents((x) =>
+			x.setContent(
+				[
+					`Dimensions: ${inlineCode(`${res.width}x${res.height}`)}`,
+					`File Size: ${inlineCode(bytes_to_size(res.size.bytes))}`,
+					'',
+					res.tags.map((x) => inlineCode(x)).join(', '),
+				].join('\n'),
+			),
+		)
+		.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+		.addActionRowComponents((x) =>
+			x.addComponents(
+				new ButtonBuilder()
+					.setStyle(ButtonStyle.Secondary)
+					.setCustomId('disabled')
+					.setDisabled(true)
+					.setLabel(`By 	${res.author}`),
+				new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(res.source).setLabel('Source'),
+			),
+		);
+
 	return int.editReply({
 		content: '',
+		components: [container],
 		files: [file],
-		components,
+		flags: [MessageFlags.IsComponentsV2],
 	});
 });

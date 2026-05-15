@@ -14,7 +14,6 @@ import {
 import type { StringLike } from 'bun';
 import { parseDate } from 'chrono-node';
 import { Vibrant } from 'node-vibrant/node';
-import sharp from 'sharp';
 import TurndownService from 'turndown';
 import UserAgents from 'user-agents';
 
@@ -160,11 +159,11 @@ export function is_url(str: string) {
 	return false;
 }
 
-export const to_png = (buf: Buffer) => sharp(buf).png().toBuffer();
+export const to_png = (buf: Buffer) => new Bun.Image(buf).png().toBuffer();
 
 export async function get_image_color(image: Buffer | string, muted = false) {
 	const buf = typeof image === 'string' ? await get_buf(image) : image;
-	const img = await sharp(buf).png().toBuffer();
+	const img = await to_png(buf);
 	const palette = await Vibrant.from(img).getPalette();
 	if (muted) {
 		if (palette.Muted) return palette.Muted.hex as ColorResolvable;

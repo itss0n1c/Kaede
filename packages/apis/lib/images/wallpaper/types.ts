@@ -34,8 +34,13 @@ export interface WallpaperInfo {
 	source: string;
 	purity: WallpaperPurity;
 	category: WallpaperCategory;
-	sorting: WallpaperSorting;
-	order: WallpaperOrdering;
+	dimension_x: number;
+	dimension_y: number;
+	resolution: string;
+	ratio: string;
+	file_size: number;
+	file_type: string;
+	created_at: string;
 	colors: `#${string}`[];
 	path: string;
 	thumbs: ThumbSizes;
@@ -71,4 +76,8 @@ export interface WallpaperSearchRes {
 	colors: `#${string}`[];
 	path: string;
 	thumbs: ThumbSizes;
+}
+
+export interface WallpaperRes extends WallpaperInfo {
+	search_res: WallpaperSearchRes;
 }

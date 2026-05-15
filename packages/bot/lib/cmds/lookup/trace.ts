@@ -1,6 +1,5 @@
 import { lookup } from '@kaede/apis';
 import {
-	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
 	AttachmentBuilder,
@@ -9,11 +8,13 @@ import {
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	Command,
+	ContainerBuilder,
 	create_scrollable,
 	fetch,
 	fileType,
 	type MessageContextMenuCommandInteraction,
 	type RepliableInteraction,
+	SeparatorSpacingSize,
 	try_prom,
 	type UserContextMenuCommandInteraction,
 } from '@kaede/utils';
@@ -48,13 +49,13 @@ async function handle_res(bot: Kaede, res: lookup.trace.TraceRes, int: Repliable
 
 			const res = await try_prom(fetch(val.video));
 			const blob = await try_prom(res?.blob());
-			if (blob) {
-				const blob_type = blob ? await fileType.fileTypeFromBlob(blob) : null;
-				const filename = `${val.id}.${blob_type?.ext ?? 'mp4'}`;
-				const buf = Buffer.from(await blob.arrayBuffer());
-				const file = new AttachmentBuilder(buf, { name: filename });
-				files.push(file);
-			}
+			if (!blob) throw new Error('Failed to fetch video preview');
+
+			const blob_type = blob ? await fileType.fileTypeFromBlob(blob) : null;
+			const filename = `${val.id}.${blob_type?.ext ?? 'mp4'}`;
+			const buf = Buffer.from(await blob.arrayBuffer());
+			const file = new AttachmentBuilder(buf, { name: filename });
+			files.push(file);
 
 			const content = [
 				`## ${name}`,
@@ -63,14 +64,21 @@ async function handle_res(bot: Kaede, res: lookup.trace.TraceRes, int: Repliable
 				`**Similarity**: ${(val.similarity * 100).toFixed(2)}%`,
 			].join('\n');
 
-			return {
-				content,
-				files,
-				components: [
-					new ActionRowBuilder<ButtonBuilder>().setComponents(
+			const container = new ContainerBuilder()
+				.addMediaGalleryComponents((x) => x.addItems((i) => i.setURL(`attachment://${file.name}`)))
+				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+				.addTextDisplayComponents((x) => x.setContent(content))
+				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+				.addActionRowComponents((x) =>
+					x.addComponents(
 						new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(site_url).setLabel('View on AniList'),
 					),
-				],
+				);
+
+			return {
+				// content,
+				components: [container],
+				files,
 			};
 		},
 	});
@@ -137,7 +145,7 @@ export const lookup_anime_contexts = [
 		type: ApplicationCommandType.User,
 	}).addHandler('user_context_menu', handle_image('user_context_menu')),
 	new Command<Kaede>({
-		name: 'Search Anime GIF',
+		name: 'Search Anime Image / GIF',
 		type: ApplicationCommandType.Message,
 	}).addHandler('message_context_menu', handle_image('message_context_menu')),
 ];

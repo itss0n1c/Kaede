@@ -3,19 +3,17 @@
 	"main": "./lib/index.ts",
 	"type": "module",
 	"devDependencies": {
-		"@types/turndown": "5.0.6",
-		"@types/user-agents": "1.0.4"
+		"@types/turndown": "5.0.6"
 	},
 	"dependencies": {
-		"chrono-node": "2.9.0",
-		"dotenv": "17.4.1",
-		"file-type": "22.0.0",
-		"filesize": "11.0.15",
-		"marked": "18.0.0",
-		"@warsam-e/echo": "7.4.1",
+		"chrono-node": "2.9.1",
+		"dotenv": "17.4.2",
+		"file-type": "22.0.1",
+		"filesize": "11.0.17",
+		"marked": "18.0.3",
+		"@warsam-e/echo": "7.4.2",
 		"node-vibrant": "4.0.4",
-		"sharp": "0.34.5",
 		"turndown": "7.2.4",
-		"user-agents": "2.1.23"
+		"user-agents": "2.1.61"
 	}
 }

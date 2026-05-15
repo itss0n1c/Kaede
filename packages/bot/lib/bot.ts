@@ -3,8 +3,8 @@ import {
 	ActivityType,
 	DefaultWebSocketManagerOptions,
 	Echo,
+	env,
 	GatewayIntentBits,
-	get_env,
 	Partials,
 	Routes,
 } from '@kaede/utils';
@@ -43,7 +43,7 @@ export class Kaede extends Echo {
 	}
 
 	static async start() {
-		const inst = await new Kaede().registerCommands(cmds).init(get_env('DISCORD_TOKEN'));
+		const inst = await new Kaede().registerCommands(cmds).init(env.DISCORD_TOKEN);
 		await inst.application?.emojis.fetch();
 		init_server();
 

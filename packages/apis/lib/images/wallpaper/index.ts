@@ -54,8 +54,6 @@ export async function search(options: Partial<WallpaperSearch>): Promise<Wallpap
 }
 
 export const search_with_info = (options: Partial<WallpaperSearch>) =>
-	search(options)
-		.then((r) => r.slice(0, 5).map((i) => get(i.id)))
-		.then((r) => Promise.all(r));
+	search(options).then((r) => Promise.all(r.slice(0, 5).map((i) => get(i.id))));
 
 export type * from './types.ts';

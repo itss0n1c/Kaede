@@ -1,6 +1,5 @@
 import { lookup } from '@kaede/apis';
 import {
-	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
 	AttachmentBuilder,
@@ -8,13 +7,14 @@ import {
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	Command,
+	ContainerBuilder,
 	create_scrollable,
 	get_buf,
-	MediaGalleryBuilder,
 	type MessageContextMenuCommandInteraction,
 	md5,
 	type RepliableInteraction,
 	type ScrollableContent,
+	SeparatorSpacingSize,
 	to_png,
 	try_prom,
 	type UserContextMenuCommandInteraction,
@@ -47,19 +47,24 @@ async function match_sauce(sauce: lookup.saucenao.SauceResItem): Promise<Scrolla
 		if (png) files.push(new AttachmentBuilder(png, { name: filename }));
 	}
 
-	const row = new ActionRowBuilder<ButtonBuilder>().setComponents([
-		new ButtonBuilder()
-			.setStyle(ButtonStyle.Secondary)
-			.setLabel(`${sauce.similarity}%`)
-			.setDisabled(true)
-			.setCustomId('_saucenao_similarities'),
-		author_button(sauce),
-		new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(`Source (${sauce.site})`).setURL(sauce.url),
-	]);
+	const container = new ContainerBuilder()
+		.addMediaGalleryComponents((x) => x.addItems((i) => i.setURL(`attachment://${filename}`)))
+		.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+		.addActionRowComponents((x) =>
+			x.addComponents(
+				new ButtonBuilder()
+					.setStyle(ButtonStyle.Secondary)
+					.setLabel(`${sauce.similarity}%`)
+					.setDisabled(true)
+					.setCustomId('_saucenao_similarities'),
+				author_button(sauce),
+				new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(`Source (${sauce.site})`).setURL(sauce.url),
+			),
+		);
 
 	return {
 		files,
-		components: [new MediaGalleryBuilder().addItems((i) => i.setURL(`attachment://${filename}`)), row],
+		components: [container],
 	};
 }
 
