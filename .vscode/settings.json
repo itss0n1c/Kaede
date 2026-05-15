@@ -1,5 +1,4 @@
 {
-	"editor.defaultFormatter": "biomejs.biome",
 	"[javascript]": {
 		"editor.defaultFormatter": "biomejs.biome"
 	},
@@ -14,6 +13,15 @@
 	},
 	"[css]": {
 		"editor.defaultFormatter": "vscode.css-language-features"
+	},
+	"nix.enableLanguageServer": true,
+	"nix.serverPath": "nixd",
+	"nix.serverSettings": {
+		"nixd": {
+			"formatting": {
+				"command": ["alejandra"]
+			}
+		}
 	},
 	"editor.codeActionsOnSave": {
 		"source.formatDocument": "explicit",

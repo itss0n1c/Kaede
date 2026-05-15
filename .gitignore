@@ -3,3 +3,4 @@ dist/
 dbs/
 .env
 www/
+.direnv
