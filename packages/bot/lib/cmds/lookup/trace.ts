@@ -65,9 +65,9 @@ async function handle_res(bot: Kaede, res: lookup.trace.TraceRes, int: Repliable
 			].join('\n');
 
 			const container = new ContainerBuilder()
-				.addMediaGalleryComponents((x) => x.addItems((i) => i.setURL(`attachment://${file.name}`)))
-				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
 				.addTextDisplayComponents((x) => x.setContent(content))
+				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
+				.addMediaGalleryComponents((x) => x.addItems((i) => i.setURL(`attachment://${file.name}`)))
 				.addSeparatorComponents((x) => x.setDivider(true).setSpacing(SeparatorSpacingSize.Large))
 				.addActionRowComponents((x) =>
 					x.addComponents(

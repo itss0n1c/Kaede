@@ -8,9 +8,7 @@
 	},
 	"devDependencies": {
 		"@kaede/apis": "workspace:*",
-		"@kaede/utils": "workspace:*",
-		"@types/node-os-utils": "1.3.4",
-		"@types/node-cron": "3.0.11"
+		"@kaede/utils": "workspace:*"
 	},
 	"dependencies": {
 		"elysia": "1.4.28",

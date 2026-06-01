@@ -19,7 +19,7 @@
 	},
 	"dependencies": {
 		"arktype": "2.2.0",
-		"arkenv": "0.11.0"
+		"arkenv": "0.11.1"
 	},
 	"trustedDependencies": [
 		"sagiri"
