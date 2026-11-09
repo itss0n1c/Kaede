@@ -1,6 +1,6 @@
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import arkenv from 'arkenv';
+import arkenv from '@arkenv/core';
 import { config } from 'dotenv';
 
 export const proj_root = join(import.meta.path, '../../../..');

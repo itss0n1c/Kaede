@@ -2,14 +2,13 @@ import { images } from '@kaede/apis';
 import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
-	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	basename,
 	type ChatInputCommandInteraction,
 	Command,
-	get_stream_node,
 	is_url,
+	url_to_attachment,
 	try_prom,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot.ts';
@@ -54,7 +53,7 @@ export async function cute_response<
 	}
 
 	const filename = basename(res.url);
-	const file = await try_prom(get_stream_node(res.url).then((b) => new AttachmentBuilder(b, { name: filename })));
+	const file = await try_prom(url_to_attachment(res.url, filename));
 	if (!file) return v.int.editReply({ content: 'something went wrong while trying to get the image' });
 
 	return v.int.editReply({

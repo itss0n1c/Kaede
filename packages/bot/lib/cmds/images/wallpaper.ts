@@ -10,10 +10,10 @@ import {
 	create_scrollable,
 	inlineCode,
 	SeparatorSpacingSize,
-	stream_to_attachment,
 	TimestampStyles,
 	time_str,
 	try_prom,
+	url_to_attachment,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot.ts';
 
@@ -129,7 +129,7 @@ export default new Command<Kaede>({
 		show_page_count: true,
 		fail_msg: bot.error_msg('no wallpapers were found!'),
 		match: async (val) => {
-			const file = await try_prom(stream_to_attachment(val.path, 'wallpaper.png'));
+			const file = await try_prom(url_to_attachment(val.path, 'wallpaper.png'));
 			if (!file) return bot.error_msg(`i wasn't able to send the photo in this card ${bot.emotes('sad')}`);
 
 			console.log(val);

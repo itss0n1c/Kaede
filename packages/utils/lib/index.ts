@@ -1,6 +1,4 @@
-import { createWriteStream } from 'node:fs';
 import { join } from 'node:path';
-import { Stream } from 'node:stream';
 import {
 	AttachmentBuilder,
 	type ColorResolvable,
@@ -13,7 +11,7 @@ import {
 } from '@warsam-e/echo';
 import type { StringLike } from 'bun';
 import { parseDate } from 'chrono-node';
-import { Vibrant } from 'node-vibrant/node';
+import { getSwatches } from 'colorthief';
 import TurndownService from 'turndown';
 import UserAgents from 'user-agents';
 
@@ -57,9 +55,9 @@ export const get_json = <T>(url: string, option: ReqInit = {}) =>
 export const get_text = (url: string, option: ReqInit = {}) =>
 	fetch(url, { ...option, require_body: true }).then((res) => res.text());
 export const get_buf = (url: string, option: ReqInit = {}) =>
-	fetch(url, { ...option, require_body: true }).then((res) => res.arrayBuffer().then((buf) => Buffer.from(buf)));
+	fetch(url, { ...option, require_body: true }).then((res) => res.arrayBuffer().then(Buffer.from));
 export const get_stream = (url: string, option: ReqInit = {}) =>
-	fetch(url, { ...option, require_body: true }).then((res) => res.body as ReadableStream<Uint8Array>);
+	fetch(url, { ...option, require_body: true }).then((res) => res.body);
 
 export interface ReqClientInit {
 	path: string;
@@ -82,30 +80,9 @@ export function api_request_client(base: string) {
 	};
 }
 
-export async function get_stream_node(url: string, option: ReqInit = {}): Promise<Stream> {
-	const res = await get_stream(url, option);
-	if (!res) throw new Error('Invalid response');
-	const stream = new Stream.PassThrough();
-	for await (const chunk of res) {
-		stream.write(chunk);
-	}
-	stream.end();
-	return stream;
-}
-
-export async function stream_to_attachment(url: string, name: string) {
-	const res = await get_stream_node(url);
-
-	return new AttachmentBuilder(res, { name });
-}
-
-export async function url_to_file(url: string, path: string) {
-	const res = await get_stream(url);
-	const stream = createWriteStream(path);
-	for await (const chunk of res) {
-		stream.write(chunk);
-	}
-	stream.end();
+export async function url_to_attachment(url: string, name: string) {
+	const buf = await get_buf(url);
+	return new AttachmentBuilder(buf, { name });
 }
 
 export function num_abbreviate(num: number, digits = 1) {
@@ -163,10 +140,11 @@ export const to_png = (buf: Buffer) => new Bun.Image(buf).png().toBuffer();
 
 export async function get_image_color(image: Buffer | string, muted = false) {
 	const buf = typeof image === 'string' ? await get_buf(image) : image;
-	const img = await to_png(buf);
-	const palette = await Vibrant.from(img).getPalette();
+	const img = await new Bun.Image(buf).png().toBuffer();
+	const palette = await getSwatches(img);
+	if (!palette) return '#000000';
 	if (muted) {
-		if (palette.Muted) return palette.Muted.hex as ColorResolvable;
+		if (palette.Muted) return palette.Muted.color.hex() as ColorResolvable;
 	}
 	const main =
 		palette.Vibrant ??
@@ -176,7 +154,7 @@ export async function get_image_color(image: Buffer | string, muted = false) {
 		palette.DarkMuted ??
 		palette.LightMuted;
 	if (!main) return '#000000';
-	return main.hex as ColorResolvable;
+	return main.color.hex() as ColorResolvable;
 }
 
 export const parse_date = (data: number | Date | string, timezone?: string) => {

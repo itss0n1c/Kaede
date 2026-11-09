@@ -2,17 +2,14 @@
 	"compilerOptions": {
 		"noEmit": true,
 		"declaration": false,
-		"forceConsistentCasingInFileNames": true,
-		"lib": ["ESNext", "DOM.AsyncIterable"],
+		"lib": ["ESNext", "DOM"],
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
-		"resolveJsonModule": true,
 		"target": "ESNext",
-		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"strictPropertyInitialization": false,
-		"allowImportingTsExtensions": true
+		"allowImportingTsExtensions": true,
+		"types": ["bun"]
 	},
 	"exclude": ["node_modules", "**/node_modules/*"]
 }

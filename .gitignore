@@ -1,6 +1,3 @@
 node_modules/
-dist/
 dbs/
-.env
-www/
-.direnv
+.env*

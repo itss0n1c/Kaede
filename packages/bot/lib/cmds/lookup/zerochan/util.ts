@@ -13,9 +13,9 @@ import {
 	type RepliableInteraction,
 	type ScrollableContent,
 	SeparatorSpacingSize,
-	stream_to_attachment,
 	TextDisplayBuilder,
 	try_prom,
+	url_to_attachment,
 } from '@kaede/utils';
 import type { Kaede } from '../../../bot.ts';
 
@@ -38,7 +38,7 @@ const large_img_link = (id: number, name: string) =>
 
 function partial_entry_to_embed(bot: Kaede) {
 	return async (entry: lookup.zerochan.ZeroPartialEntry): Promise<ScrollableContent> => {
-		const file = await try_prom(stream_to_attachment(large_img_link(entry.id, entry.tag), 'thumbnail.png'));
+		const file = await try_prom(url_to_attachment(large_img_link(entry.id, entry.tag), 'thumbnail.png'));
 		if (!file) return bot.error_msg("I wasn't able to get the image...");
 
 		const container = new ContainerBuilder()
@@ -80,7 +80,7 @@ export async function send_entry(
 	const size = filesize(entry.size);
 	const img = large_img_link(entry.id, entry.primary);
 	if (!img) return int.editReply(bot.error_msg('Thats weird, theres no images available for this post...'));
-	const file = await try_prom(stream_to_attachment(img, 'image.png'));
+	const file = await try_prom(url_to_attachment(img, 'image.png'));
 	if (!file) return int.editReply(bot.error_msg("I wasn't able to get the image..."));
 
 	const embed = new EmbedBuilder()

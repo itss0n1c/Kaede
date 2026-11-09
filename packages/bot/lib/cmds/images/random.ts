@@ -1,17 +1,16 @@
 import { images } from '@kaede/apis';
 import {
 	ActionRowBuilder,
-	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	bytes_to_size,
 	Command,
 	ContainerBuilder,
-	get_stream_node,
 	inlineCode,
 	MessageFlags,
 	SeparatorSpacingSize,
 	try_prom,
+	url_to_attachment,
 } from '@kaede/utils';
 import type { Kaede } from '../../bot.ts';
 
@@ -25,9 +24,7 @@ export default new Command<Kaede>({
 
 	console.log(res);
 
-	const file = await try_prom(
-		get_stream_node(res.url).then((b) => new AttachmentBuilder(b, { name: `${res.id}.png` })),
-	);
+	const file = await try_prom(url_to_attachment(res.url, `${res.id}.png`));
 	if (!file) return int.editReply({ content: 'Something went wrong while trying to get the image' });
 
 	const components: ActionRowBuilder<ButtonBuilder>[] = [];
