@@ -1,8 +1,8 @@
-import { env, get_buf, IS_PROD } from '@kaede/utils';
+import { get_buf, IS_PROD } from '@kaede/utils';
 import { Elysia } from 'elysia';
 import { bot } from '../bot.ts';
 
-const API_PORT = IS_PROD ? 3000 : env.API_PORT;
+const API_PORT = IS_PROD ? 3000 : 3005;
 
 export async function init_server() {
 	new Elysia().use(routes).listen(API_PORT, () => console.log(`Listening on port ${API_PORT}`));

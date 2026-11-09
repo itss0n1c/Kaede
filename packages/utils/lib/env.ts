@@ -16,13 +16,12 @@ if (Bun.env.NODE_ENV !== 'production') {
 }
 
 export const env = arkenv({
+	NODE_ENV: "'development' | 'production' | 'test' = 'development'",
 	DISCORD_TOKEN: 'string',
 	DISCORD_CLIENT_ID: 'string',
 	DISCORD_CLIENT_SECRET: 'string',
 	WH_API_KEY: 'string',
 	SAUCENAO_API_KEY: 'string',
-	API_PORT: 'number',
-	NODE_ENV: "'development' | 'production' | 'test' = 'development'",
 });
 
 export const IS_PROD = env.NODE_ENV === 'production';
