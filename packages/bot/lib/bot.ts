@@ -43,7 +43,7 @@ export class Kaede extends Echo {
 	}
 
 	static async start() {
-		const inst = await new Kaede().registerCommands(cmds).init(env.DISCORD_TOKEN);
+		const inst = await new Kaede().registerGlobal(cmds).init(env.DISCORD_TOKEN);
 		await inst.application?.emojis.fetch();
 		init_server();
 

@@ -1,4 +1,5 @@
-import { EchoSharding, env, join } from '@kaede/utils';
+import { env, join, ShardingManager } from '@kaede/utils';
 
-const current_file_path = join(import.meta.path, '../..');
-await EchoSharding.init(join(current_file_path, 'bot.ts'), env.DISCORD_TOKEN);
+const manager = new ShardingManager(join(import.meta.dir, './bot.ts'), { token: env.DISCORD_TOKEN });
+manager.on('shardCreate', (shard) => console.log(`[Kaede] Launched shard ${shard.id}`));
+await manager.spawn();

@@ -11,9 +11,9 @@
 		"dotenv": "18.0.10",
 		"file-type": "22.3.0",
 		"filesize": "11.0.30",
-		"@warsam-e/echo": "7.4.2",
+		"@warsam-e/echo": "8.0.0",
 		"turndown": "7.2.5",
-		"user-agents": "2.1.238",
+		"user-agents": "2.1.241",
 		"sharp": "0.35.5"
 	}
 }

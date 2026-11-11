@@ -39,7 +39,7 @@ export default new Command<Kaede>({
 	const shard_id = bot.shardId?.toString();
 	const [servers_count, members_count] = await Promise.all([bot.guildCount(), bot.memberCount()]);
 	const users_count = bot.application?.approximateUserInstallCount;
-	const cmds_count = bot.commands.reduce((a, b) => a + b.subcommands.length, 0);
+	const cmds_count = bot.commands.values().reduce((a, b) => a + b.subcommands.length, 0);
 
 	const bun_version = process.versions.bun ?? 'N/A';
 
